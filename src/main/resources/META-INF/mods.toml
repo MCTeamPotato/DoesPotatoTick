@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "LGPL-v3"
+
+[[mods]]
+modId = "doespotatotick"
+version = "${version}"
+displayName = "DoesPotatoTick"
+authors = "TeamPotato"
+description = '''
+A Minecraft Mod.
+'''
+
+[[dependencies.doespotatotick]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[36,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+
+[[dependencies.doespotatotick]]
+    modId = "ftbchunks"
+    mandatory = true
+    versionRange = "[1605.3.2-build.79,)"
+    ordering = "NONE"
+    side = "BOTH"
