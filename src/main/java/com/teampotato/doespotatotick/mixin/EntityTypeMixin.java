@@ -8,8 +8,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(EntityType.class)
 public class EntityTypeMixin implements Tickable.EntityType {
 
-    @Unique
-    private boolean doespotatotick$shouldAlwaysTick, doespotatotick$shouldAlwaysTickInRaid;
+    @Unique private boolean doespotatotick$shouldAlwaysTick, doespotatotick$shouldAlwaysTickInRaid;
 
     @Override
     public boolean doespotatotick$shouldAlwaysTick() {

@@ -98,7 +98,7 @@ public class DoesPotatoTick {
                 }
             }
         }));
-        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> event.getPlayer().displayClientMessage(new TranslatableComponent("doespotatotick.warn"), true));
+        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> event.getPlayer().displayClientMessage(new TranslatableComponent("doespotatotick.warn"), false));
     }
 
     public static boolean isTickable(@NotNull Entity entity) {

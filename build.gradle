@@ -120,6 +120,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     mainFile.addModLoader("Forge")
     mainFile.addJavaVersion("Java 17", "Java 8")
     mainFile.addGameVersion(supportedGameVersions)
+    mainFile.addRequirement("ftb-chunks-forge")
 
     UploadArtifact sourcesFile = mainFile.withAdditionalFile(sourcesJar)
     sourcesFile.changelog = currentChangeLog
