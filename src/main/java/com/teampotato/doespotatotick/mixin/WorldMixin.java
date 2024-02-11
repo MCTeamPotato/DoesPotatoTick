@@ -2,6 +2,7 @@ package com.teampotato.doespotatotick.mixin;
 
 import com.teampotato.doespotatotick.DoesPotatoTick;
 import com.teampotato.doespotatotick.api.Tickable;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +33,7 @@ public abstract class WorldMixin implements Tickable.Level {
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(WritableLevelData levelData, ResourceKey<Level> dimension, DimensionType dimensionType, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, CallbackInfo ci) {
+    private void onInit(WritableLevelData levelData, ResourceKey<Level> dimension, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, CallbackInfo ci) {
         if (DoesPotatoTick.DIMENSION_WHITELIST.get().contains(dimension.location().toString())) this.doespotatotick$setIsInOptimizableDimension();
     }
 

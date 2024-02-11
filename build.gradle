@@ -56,14 +56,9 @@ dependencies {
     }
     //mappings "net.fabricmc:yarn:${minecraft_version}+build.${project.yarn_mappings}:v2"
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    modImplementation("maven.modrinth:potacore:0.2.1")
-    modImplementation("maven.modrinth:potacore:0.2.1:universal-sources")
-    modImplementation("maven.modrinth:potacore:0.2.1:universal-javadoc")
 
-    modImplementation("curse.maven:ftbchunks-314906:3509329")
-    modImplementation("curse.maven:ftblibrary-404465:3514173")
-
-    modImplementation("curse.maven:observable-509575:3586190")
+    modCompileOnly("curse.maven:ftb-chunks-forge-314906:4494633")
+    modCompileOnly("curse.maven:ftb-library-forge-404465:4396792")
 }
 
 processResources {

@@ -7,7 +7,7 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "ClaimedChunkManagerMixin",
+    "ClaimedChunkManagerAccessor",
     "EntityTypeMixin",
     "WorldMixin"
   ]
