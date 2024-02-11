@@ -7,7 +7,7 @@ import com.teampotato.doespotatotick.api.Tickable;
 import com.teampotato.doespotatotick.integration.ChunkClaimProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -90,15 +90,15 @@ public class DoesPotatoTick {
     public DoesPotatoTick() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> event.enqueueWork(() -> {
-            for (EntityType<?> entityType : ForgeRegistries.ENTITIES) {
-                ResourceLocation id = entityType.getRegistryName();
+            for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES) {
+                ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
                 if (id != null) {
                     if (ENTITIES_WHITELIST.get().contains(id.toString()) || ENTITIES_MOD_ID_WHITELIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).doespotatotick$setShouldAlwaysTick();
                     if (RAID_ENTITIES_WHITELIST.get().contains(id.toString()) || RAID_ENTITIES_MOD_ID_LIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).doespotatotick$setShouldAlwaysTickInRaid();
                 }
             }
         }));
-        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> event.getPlayer().displayClientMessage(new TranslatableComponent("doespotatotick.warn"), false));
+        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn"), false));
     }
 
     public static boolean isTickable(@NotNull Entity entity) {

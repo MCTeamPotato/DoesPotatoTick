@@ -57,8 +57,8 @@ dependencies {
     //mappings "net.fabricmc:yarn:${minecraft_version}+build.${project.yarn_mappings}:v2"
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    modCompileOnly("curse.maven:ftb-chunks-forge-314906:4494633")
-    modCompileOnly("curse.maven:ftb-library-forge-404465:4396792")
+    modCompileOnly("curse.maven:ftb-chunks-forge-314906:5001266")
+    modCompileOnly("curse.maven:ftb-library-forge-404465:4661834")
 }
 
 processResources {
