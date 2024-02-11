@@ -17,11 +17,3 @@ A Minecraft Mod.
     versionRange = "[36,)"
     ordering = "NONE"
     side = "BOTH"
-
-
-[[dependencies.doespotatotick]]
-    modId = "ftbchunks"
-    mandatory = true
-    versionRange = "[1605.3.2-build.79,)"
-    ordering = "NONE"
-    side = "BOTH"
