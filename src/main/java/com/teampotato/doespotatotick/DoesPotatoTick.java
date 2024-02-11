@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.teampotato.doespotatotick.util.chunk.ActiveChunkClaimProvider;
 import com.teampotato.doespotatotick.util.chunk.DummyChunkClaimProvider;
 import com.teampotato.doespotatotick.util.chunk.IChunkClaimProvider;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -50,7 +50,7 @@ public class DoesPotatoTick implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ModLoadingContext.registerConfig(MODID, ModConfig.Type.COMMON, COMMON_CONFIG);
+        ForgeConfigRegistry.INSTANCE.register(MODID, ModConfig.Type.COMMON, COMMON_CONFIG);
         if (FabricLoader.getInstance().isModLoaded("ftbchunks")) {
             chunkClaimProvider = new ActiveChunkClaimProvider();
         } else {

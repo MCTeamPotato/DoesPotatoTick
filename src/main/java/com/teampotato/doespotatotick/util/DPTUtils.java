@@ -6,14 +6,16 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DPTUtils {
     private static Identifier getRegistryName(EntityType<? extends Entity> type){
-        return Registry.ENTITY_TYPE.getId(type);
+        return Registries.ENTITY_TYPE.getId(type);
     }
 
     public static boolean isInClaimedChunk(World world, BlockPos pos) {
@@ -36,16 +38,16 @@ public class DPTUtils {
         BlockPos pos = entity.getBlockPos();
         int horizontal = DoesPotatoTick.LIVING_ENTITIES_HORIZONTAL_TICK_DISTANCE.get();
         int vertical = DoesPotatoTick.LIVING_ENTITIES_VERTICAL_TICK_DISTANCE.get();
-        if (isInClaimedChunk(entity.world, pos) || entity instanceof PlayerEntity) return true;
+        if (isInClaimedChunk(entity.getWorld(), pos) || entity instanceof PlayerEntity) return true;
         Identifier name = getRegistryName(entity.getType());
         String regName = name.toString();
         if (entity instanceof ItemEntity) {
             if (!DoesPotatoTick.OPTIMIZE_ITEM_MOVEMENT.get() || DoesPotatoTick.ITEM_LIST.get().contains(regName)) return true;
-            return (entity.world.random.nextInt(3) > 1);
+            return (ThreadLocalRandom.current().nextInt(3) > 1);
         }
         return !(entity instanceof LivingEntity) ||
                 (DoesPotatoTick.IGNORE_DEAD_ENTITIES.get() && ((LivingEntity) entity).isDead()) ||
-                isNearPlayer(entity.world, pos, vertical, horizontal * horizontal) ||
+                isNearPlayer(entity.getWorld(), pos, vertical, horizontal * horizontal) ||
                 DoesPotatoTick.ENTITIES_WHITELIST.get().contains(regName) ||
                 DoesPotatoTick.ENTITIES_MOD_ID_LIST.get().contains(name.getNamespace());
     }
