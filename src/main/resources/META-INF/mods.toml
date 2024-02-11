@@ -22,6 +22,6 @@ A Minecraft Mod.
 [[dependencies.doespotatotick]]
     modId = "ftbchunks"
     mandatory = true
-    versionRange = "[1605.3.2-build.79,)"
+    versionRange = "[1802.3.17-build.265,)"
     ordering = "NONE"
     side = "BOTH"
