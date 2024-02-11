@@ -39,11 +39,12 @@ import java.util.stream.Collectors;
 @Mod(DoesPotatoTick.MOD_ID)
 public class DoesPotatoTick {
     public static final String MOD_ID = "doespotatotick";
-    public static final @Nullable ChunkClaimProvider CHUNK_CLAIM_PROVIDER = FMLLoader.getLoadingModList().getModFileById("ftbchunks") != null ? new ChunkClaimProvider() : null;
+    private static final boolean IS_FTB_CHUNKS_PRESENT = FMLLoader.getLoadingModList().getModFileById("ftbchunks") != null;
+    public static final @Nullable ChunkClaimProvider CHUNK_CLAIM_PROVIDER = IS_FTB_CHUNKS_PRESENT ? new ChunkClaimProvider() : null;
 
     public static final ForgeConfigSpec COMMON_CONFIG;
     public static final ForgeConfigSpec.IntValue LIVING_HORIZONTAL_TICK_DIST, LIVING_VERTICAL_TICK_DIST;
-    public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ITEM_MOVEMENT, IGNORE_DEAD_ENTITIES, TICKING_RAIDER_ENTITIES_IN_RAID, OPTIMIZE_ENTITIES_TICKING;
+    public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ITEM_MOVEMENT, IGNORE_DEAD_ENTITIES, TICKING_RAIDER_ENTITIES_IN_RAID, OPTIMIZE_ENTITIES_TICKING, SEND_MESSAGE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITIES_WHITELIST, ITEMS_WHITELIST, ENTITIES_MOD_ID_WHITELIST, RAID_ENTITIES_WHITELIST, RAID_ENTITIES_MOD_ID_LIST, DIMENSION_WHITELIST;
 
     static {
@@ -82,6 +83,9 @@ public class DoesPotatoTick {
         OPTIMIZE_ITEM_MOVEMENT = builder.comment("Slow down item entities' ticking speed by 1/4").define("OptimizeItemMovement", false);
         ITEMS_WHITELIST = builder.comment("If you don't want to let a specific item entity in the world to be effected by the optimization, you can write its registry name down here.", "Require 'OptimizeItemMovement' to be true").defineList("ItemWhiteList", itemList, Predicates.alwaysTrue());
         builder.pop();
+        builder.push("Misc");
+        SEND_MESSAGE = builder.define("SendWarningMessageWhenPlayerLogIn", true);
+        builder.pop();
         COMMON_CONFIG = builder.build();
     }
 
@@ -98,7 +102,14 @@ public class DoesPotatoTick {
                 }
             }
         }));
-        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn"), false));
+        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.PlayerLoggedInEvent event) -> {
+            if (!SEND_MESSAGE.get()) return;
+            if (IS_FTB_CHUNKS_PRESENT) {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.1"), false);
+            } else {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.2"), false);
+            }
+        });
     }
 
     public static boolean isTickable(@NotNull Entity entity) {
