@@ -10,18 +10,3 @@ authors = "TeamPotato"
 description = '''
 A Minecraft Mod.
 '''
-
-[[dependencies.doespotatotick]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "[36,)"
-    ordering = "NONE"
-    side = "BOTH"
-
-
-[[dependencies.doespotatotick]]
-    modId = "ftbchunks"
-    mandatory = true
-    versionRange = "[1802.3.17-build.265,)"
-    ordering = "NONE"
-    side = "BOTH"
