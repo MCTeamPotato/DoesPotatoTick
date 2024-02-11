@@ -1,14 +1,14 @@
 {
   "required": true,
-  "package": "com.teampotato.doespotatotick.mixin",
-  "compatibilityLevel": "JAVA_8",
   "minVersion": "0.8",
-  "injectors": {
-    "defaultRequire": 1
-  },
+  "package": "com.teampotato.doespotatotick.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "doespotatotick-refmap.json",
   "mixins": [
     "ClaimedChunkManagerMixin",
-    "EntityTypeMixin",
-    "WorldMixin"
-  ]
+    "EntityTickInWorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

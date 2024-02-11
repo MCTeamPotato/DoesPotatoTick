@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Mixin(value = ClaimedChunkManager.class, remap = false)
 public abstract class ClaimedChunkManagerMixin {
-    @Mutable @Shadow @Final public Map<ChunkDimPos, ClaimedChunk> claimedChunks;
+    @Mutable @Shadow @Final private Map<ChunkDimPos, ClaimedChunk> claimedChunks;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {

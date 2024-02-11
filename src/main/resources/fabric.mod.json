@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "doespotatotick",
+  "version": "${version}",
+  "name": "Does Potato Tick",
+  "description": "",
+  "authors": [
+    "Team Potato"
+  ],
+  "contact": {
+    "homepage": "https://github.com/MCTeamPotato",
+    "sources": "https://github.com/MCTeamPotato/DoesPotatoTick"
+  },
+
+  "license": "GNU Lesser General Public License v3.0",
+  "icon": "assets/doespotatotick/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.teampotato.doespotatotick.DoesPotatoTick"
+    ]
+  },
+  "mixins": [
+    "doespotatotick.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.10",
+    "minecraft": "*",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
