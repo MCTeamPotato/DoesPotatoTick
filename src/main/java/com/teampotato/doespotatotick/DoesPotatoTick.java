@@ -103,7 +103,7 @@ public class DoesPotatoTick {
 
     public static boolean isTickable(@NotNull Entity entity) {
         if (OPTIMIZE_ENTITIES_TICKING.get()) {
-            Level level = entity.level;
+            Level level = entity.level();
             if (isOptimizableDim(level)) {
                 if (!IGNORE_DEAD_ENTITIES.get() && isEntityDead(entity)) return true;
                 if (isOptimizableItemEntity(entity)) return ThreadLocalRandom.current().nextBoolean() || ThreadLocalRandom.current().nextBoolean();
