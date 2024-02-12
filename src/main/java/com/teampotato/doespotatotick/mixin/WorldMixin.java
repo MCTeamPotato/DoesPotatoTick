@@ -34,6 +34,7 @@ public abstract class WorldMixin implements Tickable.Level {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(WritableLevelData levelData, ResourceKey<Level> dimension, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates, CallbackInfo ci) {
+        if (dimension == null) return;
         if (DoesPotatoTick.DIMENSION_WHITELIST.get().contains(dimension.location().toString())) this.doespotatotick$setIsInOptimizableDimension();
     }
 
