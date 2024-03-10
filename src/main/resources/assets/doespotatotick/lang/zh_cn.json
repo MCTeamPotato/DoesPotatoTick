@@ -1,4 +1,4 @@
 {
   "doespotatotick.warn.1": "Does Potato Tick 已被此服务器安装。 如果你发现你的刷怪塔在你距离它很远时无法正常工作，请尝试使用 FTB Chunks 声明其所在的区块。你可以在配置文件中禁用此条警告的发出。",
-  "doespotatotick.warn.2": "Does Potato Tick 已被此服务器安装，但 FTB Chunks 没有。如果你发现你的刷怪塔在你距离它很远时无法正常工作，请尝试安装 FTB Chunks 并声明其所在的区块。你可以在配置文件中禁用此条警告的发出。"
+  "doespotatotick.warn.2": "Does Potato Tick 已被此服务器安装，但 FTB Chunks 没有。如果你发现你的刷怪塔在你距离它很远时无法正常工作，请尝试安装 FTB Chunks 并声明其所在的区块。你可以在配置文件中禁用此条警告的发出，但如果你正在制作将会公开发布的整合包，不推荐将此条信息关闭，因为你难以查明你的终端玩家是否有怪物农场的需求。"
 }
