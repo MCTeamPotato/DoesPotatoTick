@@ -1,4 +1,4 @@
 {
   "doespotatotick.warn.1": "Does Potato Tick is installed in this server. If you find your mobfarm not working when you are far from it, try to use FTB Chunks to claim the chunks of it. You can disable this message in Does Potato Tick's config",
-  "doespotatotick.warn.2": "Does Potato Tick is installed but FTB Chunks is not. If you find your mobfarm not working when you are far from it, try to install FTB Chunks and claim the chunks of it. You can disable this message in Does Potato Tick's config"
+  "doespotatotick.warn.2": "Does Potato Tick is installed but FTB Chunks is not. If you find your mobfarm not working when you are far from it, try to install FTB Chunks and claim the chunks of it. You can disable this message in Does Potato Tick's config. But if you're making a modpack that will be publicly released, it's not recommended to mute this message as it's hard for you to figure out whether or not your end-users will build mobfarms."
 }
