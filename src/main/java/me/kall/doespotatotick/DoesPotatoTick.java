@@ -28,7 +28,7 @@ public final class DoesPotatoTick {
 
     public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.COMMON, PotatoConfig.COMMON_CONFIG);
-        MinecraftForge.EVENT_BUS.addListener(PotatoConfig::setupConfig);
+        context.getModEventBus().addListener(PotatoConfig::setupConfig);
         MinecraftForge.EVENT_BUS.addListener(PotatoConfig::warn);
     }
 
