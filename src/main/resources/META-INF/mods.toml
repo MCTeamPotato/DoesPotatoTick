@@ -1,12 +1,13 @@
 modLoader = "javafml"
 loaderVersion = "[36,)"
-license = "LGPL-v3"
+#issueTrackerURL = ""
+license = "MIT"
 
 [[mods]]
 modId = "doespotatotick"
 version = "${version}"
 displayName = "DoesPotatoTick"
-authors = "TeamPotato"
+authors = "Kall"
 description = '''
-A Minecraft Mod.
 '''
+#logoFile = ""

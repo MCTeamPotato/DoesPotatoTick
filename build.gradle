@@ -1,43 +1,26 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.darkhax.curseforgegradle.UploadArtifact
-
 plugins {
-    id "dev.architectury.loom" version "1.10-SNAPSHOT"
-    id 'com.modrinth.minotaur' version '2.+'
-    id 'net.darkhax.curseforgegradle' version '1.1.+'
+    id 'dev.architectury.loom' version '1.10-SNAPSHOT'
 }
+
+group = project.maven_group
+version = project.minecraft_version + "-" + project.mod_version
 
 base {
-    archivesName = "${archives_base_name}"
-}
-
-version = "${minecraft_version}-${mod_version}"
-group = "${maven_group}"
-
-java {
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+    archivesName = project.archives_name
 }
 
 loom {
     silentMojangMappingsLicense()
+
     forge {
-        mixinConfigs = [
-            "doespotatotick.mixins.json"
-        ]
+        mixinConfig 'doespotatotick.mixins.json'
     }
 }
 
 repositories {
-    maven { url 'https://jitpack.io' }
     maven {
-        name 'ParchmentMC'
-        url 'https://maven.parchmentmc.org'
-    }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
     }
     maven {
         name = "Modrinth"
@@ -46,78 +29,47 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
     }
-    //mappings "net.fabricmc:yarn:${minecraft_version}+build.${project.yarn_mappings}:v2"
-    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    modCompileOnly("curse.maven:ftb-chunks-forge-314906:5004644")
-    modCompileOnly("curse.maven:ftb-library-forge-404465:5051953")
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    modImplementation("curse.maven:ftb-chunks-forge-314906:6431735")
+    modImplementation("curse.maven:ftb-library-forge-404465:6164053")
 }
 
 processResources {
-    inputs.property "version", project.version
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+    inputs.property 'version', project.version
+
+    filesMatching('META-INF/mods.toml') {
+        expand version: project.version
+    }
+}
+
+java {
+    if (version.startsWith("1.16.5")) {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    } else {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.release.set(8)
-}
-
-java {
-    withSourcesJar()
-}
-
-jar {
-    manifest {
-        attributes([
-                "Implementation-Title"    : archives_base_name,
-                "Implementation-Version"  : mod_version,
-                "Implementation-Vendor"   : mod_author,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+    if (version.startsWith("1.16.5")) {
+        it.options.release = 8
+    } else {
+        it.options.release = 17
     }
-}
-
-String[] supportedGameVersions = new String[]{"${minecraft_version}"}
-String currentChangeLog = file("CHANGELOG.md").getText("UTF-8");
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "${archives_base_name}"
-    versionNumber = "${mod_version}"
-    uploadFile = remapJar
-    gameVersions.addAll(supportedGameVersions)
-    loaders = ["forge"]
-    versionType = "release"
-    additionalFiles = [sourcesJar]
-    changelog.set(currentChangeLog)
-}
-
-tasks.register("publishCurseForge", TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-    disableVersionDetection()
-
-    UploadArtifact mainFile = upload(cf_project_id, remapJar)
-    mainFile.displayName = "${archives_base_name}-${version}"
-    mainFile.releaseType = "release"
-    mainFile.changelog = currentChangeLog
-    mainFile.changelogType = "markdown"
-    mainFile.addModLoader("Forge")
-    mainFile.addJavaVersion("Java 17", "Java 8")
-    mainFile.addGameVersion(supportedGameVersions)
-    mainFile.addRequirement("ftb-chunks-forge")
-
-    UploadArtifact sourcesFile = mainFile.withAdditionalFile(sourcesJar)
-    sourcesFile.changelog = currentChangeLog
-    sourcesFile.changelogType = "markdown"
 }

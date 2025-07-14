@@ -1,0 +1,62 @@
+package me.kall.doespotatotick;
+
+import me.kall.doespotatotick.common.api.Tickable;
+import me.kall.doespotatotick.common.config.PotatoConfig;
+import me.kall.doespotatotick.common.integration.ChunkChecker;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+@Mod(DoesPotatoTick.MOD_ID)
+public final class DoesPotatoTick {
+    public static final String MOD_ID = "doespotatotick";
+    public static final @Nullable ChunkChecker CHECKER = FMLLoader.getLoadingModList().getModFileById("ftbchunks") != null ? new ChunkChecker() : null;
+
+    public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
+        context.registerConfig(ModConfig.Type.COMMON, PotatoConfig.COMMON_CONFIG);
+        MinecraftForge.EVENT_BUS.addListener(PotatoConfig::setupConfig);
+        MinecraftForge.EVENT_BUS.addListener(PotatoConfig::warn);
+    }
+
+    public static boolean isTickable(Entity entity) {
+        if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
+
+        Level level = entity.level();
+        BlockPos entityPos = entity.blockPosition();
+        EntityType<?> entityType = entity.getType();
+
+        if (((Tickable.EntityType)entityType).doesPotatoTick$shouldAlwaysTick()) return true;
+
+        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Level)level).doesPotatoTick$isInOptimizableDimension()) return true;
+
+        if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && entity instanceof LivingEntity living && living.isDeadOrDying()) return true;
+
+        if (CHECKER != null && CHECKER.isClaimed(level, entityPos)) return true;
+
+        if (level instanceof ServerLevel serverLevel) {
+            if (PotatoConfig.ALLOW_TICKING_FORCE_LOADED.get() && serverLevel.getForcedChunks().contains(serverLevel.getChunkAt(entityPos).getPos().toLong())) return true;
+            if (serverLevel.isRaided(entityPos)) {
+                if (entity instanceof Raider && PotatoConfig.TICKING_RAIDER_ENTITIES_IN_RAID.get()) return true;
+                if (((Tickable.EntityType)entityType).doesPotatoTick$shouldAlwaysTickInRaid()) return true;
+            }
+        }
+
+        if (PotatoConfig.OPTIMIZE_ITEM_MOVEMENT.get() && entity instanceof ItemEntity itemEntity && !PotatoConfig.getItems().contains(itemEntity.getItem().getItem())) return ThreadLocalRandom.current().nextBoolean();
+
+        return PotatoConfig.isNearPlayer(level, entityPos);
+    }
+}
