@@ -3,8 +3,8 @@ package me.kall.doespotatotick.common.config;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.common.api.Tickable;
+import me.kall.doespotatotick.common.integration.ClaimManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -113,10 +113,18 @@ public class PotatoConfig {
 
     public static void warn(PlayerEvent.PlayerLoggedInEvent event) {
         if (!SEND_MESSAGE.get()) return;
-        if (DoesPotatoTick.CHECKER == null) {
-            event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.2"), false);
+        if (ClaimManager.FTB_CHUNKS) {
+            if (ClaimManager.OPEN_PARTIES_AND_CLAIMS) {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.both.present"), false);
+            } else {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.ftbchunks.present"), false);
+            }
         } else {
-            event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.1"), false);
+            if (ClaimManager.OPEN_PARTIES_AND_CLAIMS) {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.openpartiesandclaims.present"), false);
+            } else {
+                event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.notfound"), false);
+            }
         }
     }
 

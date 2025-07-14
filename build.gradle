@@ -46,6 +46,7 @@ dependencies {
     forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
     modImplementation("curse.maven:ftb-chunks-forge-314906:6431735")
     modImplementation("curse.maven:ftb-library-forge-404465:6164053")
+    modImplementation("curse.maven:open-parties-and-claims-636608:6242869")
 }
 
 processResources {
