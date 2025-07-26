@@ -31,6 +31,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.BooleanValue IGNORE_HOSTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue TICKING_RAIDER_ENTITIES_IN_RAID;
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ENTITIES_TICKING;
+    public static final ForgeConfigSpec.BooleanValue ONLY_LIVING_OPTIMIZABLE;
     public static final ForgeConfigSpec.BooleanValue SEND_MESSAGE;
     public static final ForgeConfigSpec.BooleanValue ALLOW_TICKING_FORCE_LOADED;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITIES_WHITELIST;
@@ -71,6 +72,7 @@ public class PotatoConfig {
         DIMENSION_WHITELIST = builder.comment("Leave this empty for applying to all the dimensions", "Entities in these dimensions will be affected by the optimization").defineList("DimensionWhitelist", new ObjectArrayList<>(), Predicates.alwaysTrue());
         IGNORE_DEAD_ENTITIES = builder.comment("If this is enabled, dead entities will always tick").define("IgnoreDeadEntities", false);
         IGNORE_HOSTILE_ENTITIES = builder.comment("If this is enabled, hostile entities will always tick").define("IgnoreHostileEntities", false);
+        ONLY_LIVING_OPTIMIZABLE = builder.comment("If this is enabled, optimization will only take effect on living entities").define("OnlyLivingOptimizable", false);
         builder.pop();
         builder.push("Item Entities Tick Settings");
         OPTIMIZE_ITEM_MOVEMENT = builder.comment("Slow down item entities' ticking speed", "Note this does impact rendering continuity, so this optimization is disabled by default").define("OptimizeItemMovement", false);
