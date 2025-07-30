@@ -1,2 +1,2 @@
-# 5.2.1
-Introduce ONLY_LIVING_OPTIMIZABLE config option
+# 5.2.2
+Add IgnoreProjectiles config option (enable by default)

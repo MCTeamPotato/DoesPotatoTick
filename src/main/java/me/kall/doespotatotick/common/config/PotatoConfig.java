@@ -29,6 +29,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ITEM_MOVEMENT;
     public static final ForgeConfigSpec.BooleanValue IGNORE_DEAD_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_HOSTILE_ENTITIES;
+    public static final ForgeConfigSpec.BooleanValue IGNORE_PROJECTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue TICKING_RAIDER_ENTITIES_IN_RAID;
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ENTITIES_TICKING;
     public static final ForgeConfigSpec.BooleanValue ONLY_LIVING_OPTIMIZABLE;
@@ -72,6 +73,7 @@ public class PotatoConfig {
         DIMENSION_WHITELIST = builder.comment("Leave this empty for applying to all the dimensions", "Entities in these dimensions will be affected by the optimization").defineList("DimensionWhitelist", new ObjectArrayList<>(), Predicates.alwaysTrue());
         IGNORE_DEAD_ENTITIES = builder.comment("If this is enabled, dead entities will always tick").define("IgnoreDeadEntities", false);
         IGNORE_HOSTILE_ENTITIES = builder.comment("If this is enabled, hostile entities will always tick").define("IgnoreHostileEntities", false);
+        IGNORE_PROJECTILE_ENTITIES = builder.comment("If this is enabled, projectiles will always tick").define("IgnoreProjectiles", true);
         ONLY_LIVING_OPTIMIZABLE = builder.comment("If this is enabled, optimization will only take effect on living entities").define("OnlyLivingOptimizable", false);
         builder.pop();
         builder.push("Item Entities Tick Settings");

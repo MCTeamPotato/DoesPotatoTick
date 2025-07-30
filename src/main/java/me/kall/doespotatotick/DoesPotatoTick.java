@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -34,6 +35,7 @@ public final class DoesPotatoTick {
 
     public static boolean isTickable(Entity entity) {
         if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
+        if (entity instanceof Projectile && PotatoConfig.IGNORE_PROJECTILE_ENTITIES.get()) return true;
         if (PotatoConfig.ONLY_LIVING_OPTIMIZABLE.get()) {
             if (entity instanceof LivingEntity living) {
                 if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && living.isDeadOrDying()) return true;
