@@ -36,6 +36,7 @@ public final class DoesPotatoTick {
     public static boolean isTickable(Entity entity) {
         if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
         if (entity instanceof Projectile && PotatoConfig.IGNORE_PROJECTILE_ENTITIES.get()) return true;
+        if (entity instanceof ItemEntity && PotatoConfig.IGNORE_ITEM_ENTITIES.get()) return true;
         if (PotatoConfig.ONLY_LIVING_OPTIMIZABLE.get()) {
             if (entity instanceof LivingEntity living) {
                 if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && living.isDeadOrDying()) return true;

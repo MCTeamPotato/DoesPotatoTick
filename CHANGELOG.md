@@ -1,2 +1,2 @@
-# 5.2.2
-Add IgnoreProjectiles config option (enable by default)
+# 5.2.3
+Add IgnoreItemEntities config option (enable by default)

@@ -30,6 +30,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.BooleanValue IGNORE_DEAD_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_HOSTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PROJECTILE_ENTITIES;
+    public static final ForgeConfigSpec.BooleanValue IGNORE_ITEM_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue TICKING_RAIDER_ENTITIES_IN_RAID;
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ENTITIES_TICKING;
     public static final ForgeConfigSpec.BooleanValue ONLY_LIVING_OPTIMIZABLE;
@@ -77,6 +78,7 @@ public class PotatoConfig {
         ONLY_LIVING_OPTIMIZABLE = builder.comment("If this is enabled, optimization will only take effect on living entities").define("OnlyLivingOptimizable", false);
         builder.pop();
         builder.push("Item Entities Tick Settings");
+        IGNORE_ITEM_ENTITIES = builder.comment("If this is enabled, item entities will always tick").define("IgnoreItemEntities", true);
         OPTIMIZE_ITEM_MOVEMENT = builder.comment("Slow down item entities' ticking speed", "Note this does impact rendering continuity, so this optimization is disabled by default").define("OptimizeItemMovement", false);
         ITEMS_WHITELIST = builder.comment("If you don't want to let a specific item entity in the world to be effected by the optimization, you can write its registry name down here.", "Require 'OptimizeItemMovement' to be true").defineList("ItemWhiteList", itemList, Predicates.alwaysTrue());
         builder.pop();
