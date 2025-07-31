@@ -67,7 +67,7 @@ public class PotatoConfig {
         LIVING_VERTICAL_TICK_DIST = builder.defineInRange("LivingEntitiesMaxVerticalTickDistance", 32, 1, Integer.MAX_VALUE);
         ENTITIES_WHITELIST = builder.comment("If you don't want an entity to be affected by the optimization, you can write its registry name down here.").defineList("EntitiesWhitelist", entityWhiteList, Predicates.alwaysTrue());
         ENTITIES_MOD_ID_WHITELIST = builder.comment("If you don't want entities of a mod to be affected by the optimization, you can write its modid down here").defineList("EntitiesModIDWhiteList", entityModIdList, Predicates.alwaysTrue());
-        TICKING_RAIDER_ENTITIES_IN_RAID = builder.comment("With this turned on, all the raider won't stop ticking in raid chunks even if they are far from players (well this is not perfect as the raiders may walk out of the raid range)").define("TickRaidersInRaid", true);
+        TICKING_RAIDER_ENTITIES_IN_RAID = builder.comment("With this turned on, all the raider will always tick if the world has raids").define("TickRaidersIfRaid", true);
         RAID_ENTITIES_WHITELIST = builder.comment("Similar to entity whitelist, but only take effect in raid.").defineList("RaidEntitiesWhiteList", ObjectArrayList.wrap(new String[]{"minecraft:witch", "minecraft:vex"}), Predicates.alwaysTrue());
         RAID_ENTITIES_MOD_ID_LIST = builder.comment("Similar to entity modID whitelist, but only take effect in raid").defineList("RaidEntitiesModIDWhiteList", new ObjectArrayList<>(), Predicates.alwaysTrue());
         ALLOW_TICKING_FORCE_LOADED = builder.comment("Allow ticking of entities in force loaded chunks").define("AllowForceLoaded", true);

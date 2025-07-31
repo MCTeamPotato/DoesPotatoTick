@@ -1,5 +1,6 @@
 package me.kall.doespotatotick;
 
+import me.kall.doespotatotick.common.api.IRaids;
 import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.config.PotatoConfig;
 import me.kall.doespotatotick.common.integration.ClaimManager;
@@ -59,7 +60,7 @@ public final class DoesPotatoTick {
 
         if (level instanceof ServerLevel serverLevel) {
             if (PotatoConfig.ALLOW_TICKING_FORCE_LOADED.get() && serverLevel.getForcedChunks().contains(ChunkPos.asLong(entityPos))) return true;
-            if (serverLevel.isRaided(entityPos)) {
+            if (((IRaids)serverLevel.getRaids()).doesPotatoTick$hasRaid()) {
                 if (entity instanceof Raider && PotatoConfig.TICKING_RAIDER_ENTITIES_IN_RAID.get()) return true;
                 if (((Tickable.EntityType)entityType).doesPotatoTick$shouldAlwaysTickInRaid()) return true;
             }

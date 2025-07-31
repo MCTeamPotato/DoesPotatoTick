@@ -1,2 +1,2 @@
-# 5.2.3
-Add IgnoreItemEntities config option (enable by default)
+# 5.2.4
+Tick all the raider entities if the world has any raids.

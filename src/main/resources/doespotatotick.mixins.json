@@ -11,7 +11,8 @@
   "mixins": [
     "LevelMixin",
     "impl.EntityTypeMixin",
-    "impl.LevelMixin"
+    "impl.LevelMixin",
+    "impl.RaidsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
