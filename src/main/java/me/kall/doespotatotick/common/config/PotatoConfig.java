@@ -45,7 +45,7 @@ public class PotatoConfig {
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
-        List<? extends String> entityModIdList = Lists.newArrayList("create", "witherstormmod");
+        List<? extends String> entityModIdList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks");
         List<? extends String> entityWhiteList = Lists.newArrayList("minecraft:ender_dragon", "minecraft:ghast", "minecraft:wither", "minecraft:player",
                 "alexsmobs:void_worm", "alexsmobs:void_worm_part", "alexsmobs:spectre",
                 "twilightforest:naga", "twilightforest:lich", "twilightforest:yeti", "twilightforest:snow_queen", "twilightforest:minoshroom", "twilightforest:hydra", "twilightforest:knight_phantom", "twilightforest:ur_ghast",

@@ -1,2 +1,2 @@
-# 5.2.4
-Tick all the raider entities if the world has any raids.
+# 5.2.5
+Add traveloptics and irons_spellbooks to blacklist
