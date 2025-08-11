@@ -38,13 +38,11 @@ public final class DoesPotatoTick {
         if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
         if (entity instanceof Projectile && PotatoConfig.IGNORE_PROJECTILE_ENTITIES.get()) return true;
         if (entity instanceof ItemEntity && PotatoConfig.IGNORE_ITEM_ENTITIES.get()) return true;
-        if (PotatoConfig.ONLY_LIVING_OPTIMIZABLE.get()) {
-            if (entity instanceof LivingEntity living) {
-                if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && living.isDeadOrDying()) return true;
-                if (PotatoConfig.IGNORE_HOSTILE_ENTITIES.get() && (living instanceof Enemy)) return true;
-            } else {
-                return true;
-            }
+        if (entity instanceof LivingEntity living) {
+            if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && living.isDeadOrDying()) return true;
+            if (PotatoConfig.IGNORE_HOSTILE_ENTITIES.get() && (living instanceof Enemy)) return true;
+        } else {
+            if (PotatoConfig.ONLY_LIVING_OPTIMIZABLE.get()) return true;
         }
 
         Level level = entity.level();
