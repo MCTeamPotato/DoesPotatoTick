@@ -7,8 +7,10 @@
   },
   "minVersion": "0.8",
   "client": [
+    "EntityRenderDispatcherMixin"
   ],
   "mixins": [
+    "EntityMixin",
     "LevelMixin",
     "impl.EntityTypeMixin",
     "impl.LevelMixin",

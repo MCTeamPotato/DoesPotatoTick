@@ -1,6 +1,6 @@
 package me.kall.doespotatotick.common.mixin;
 
-import me.kall.doespotatotick.DoesPotatoTick;
+import me.kall.doespotatotick.common.api.Tickable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public abstract class LevelMixin {
     @Inject(method = "guardEntityTick", at = @At("HEAD"), cancellable = true)
     private <T extends Entity> void onEntityTick(Consumer<T> consumerEntity, T entity, CallbackInfo ci) {
-        if (DoesPotatoTick.isTickable(entity)) return;
+        if (((Tickable)entity).doesPotatoTick$isTickable()) return;
         ci.cancel();
     }
 }

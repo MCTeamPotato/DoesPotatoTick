@@ -42,6 +42,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RAID_ENTITIES_WHITELIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RAID_ENTITIES_MOD_ID_LIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_WHITELIST;
+    public static final ForgeConfigSpec.BooleanValue STOP_RENDERING_SKIPPED_ENTITIES;
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
@@ -84,6 +85,7 @@ public class PotatoConfig {
         builder.pop();
         builder.push("Misc");
         SEND_MESSAGE = builder.define("SendWarningMessageWhenPlayerLogIn", true);
+        STOP_RENDERING_SKIPPED_ENTITIES = builder.define("StopRenderingSkippedEntities", true);
         builder.pop();
         COMMON_CONFIG = builder.build();
     }

@@ -1,2 +1,2 @@
-# 5.2.6
-Fix OnlyLivingOptimizable config impl
+# 5.3.0
+Introduce StopRenderingSkippedEntities config option (enabled by default)
