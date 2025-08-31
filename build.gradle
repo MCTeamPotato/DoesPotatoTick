@@ -1,15 +1,47 @@
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import net.darkhax.curseforgegradle.UploadArtifact
 
 plugins {
     id 'dev.architectury.loom' version '1.10-SNAPSHOT'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
     id 'net.darkhax.curseforgegradle' version '1.1.+'
+}
+
+boolean isNeo = minecraft_version == "1.21.1"
+boolean isOld = minecraft_version == "1.16.5"
+
+boolean useShadow = use_shadow == "true"
+boolean useMixin = use_mixin == "true"
+boolean useMixinExtras = use_mixin_extras == "true"
+boolean claimIntegration = claim_integration == "true"
+boolean embeddiumIntegration = embeddium_integration == "true"
+boolean useProvider = use_provider == "true"
+boolean useJsonate = use_jsonate == "true"
+
+if (isNeo) useShadow = false
+
+if (useShadow) {
+    configurations {
+        shadow
+        implementation.extendsFrom(shadow)
+    }
+
+    shadowJar {
+        configurations = [project.configurations.shadow]
+        relocate "com.llamalad7.mixinextras", "me.kall.doespotatotick.mixinextras"
+        mergeServiceFiles()
+        archiveClassifier = "dev-shadow"
+    }
+
+    remapJar {
+        dependsOn tasks.named("shadowJar")
+        inputFile = shadowJar.archiveFile
+        archiveClassifier = null
+    }
 }
 
 group = project.maven_group
 version = "${project.minecraft_version}-${project.mod_version}"
-
-def isNeo = minecraft_version == "1.21.1"
-def isOld = minecraft_version == "1.16.5"
 
 base {
     archivesName = project.archives_name
@@ -18,7 +50,7 @@ base {
 loom {
     silentMojangMappingsLicense()
 
-    if (!isNeo) {
+    if (!isNeo && useMixin) {
         forge {
             mixinConfig 'doespotatotick.mixins.json'
         }
@@ -40,14 +72,14 @@ repositories {
 }
 
 def versionMap = [
-    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869"],
-    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849"],
-    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845"],
-    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840"],
-    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205"]
+    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869", embeddium: "5681725", provider: "6849706", jsonate: "6903435"],
+    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849", embeddium: "5539178", provider: "6851068", jsonate: "6903435"],
+    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845", embeddium: "5322305", provider: "6849704", jsonate: "6903435"],
+    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840", opac: "unfound" , embeddium: "5322311", provider: "6849710", jsonate: "6903435"],
+    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205", embeddium: "6118392", provider: "6849715", jsonate: "6903433"]
 ]
 
-def versionInfo = versionMap[minecraft_version]
+LinkedHashMap<String, String> versionInfo = versionMap[minecraft_version]
 if (versionInfo == null) throw new IllegalArgumentException("Unsupported version: ${minecraft_version}")
 
 String forgeVersion = versionInfo.forge ?: ""
@@ -55,10 +87,14 @@ String parchmentVersion = versionInfo.parchment
 String ftbChunks = versionInfo.ftbChunks ?: ""
 String ftbLib = versionInfo.ftbLib ?: ""
 String opac = versionInfo.opac ?: ""
+String embeddium = versionInfo.embeddium ?: ""
+String provider = versionInfo.provider ?: ""
+String jsonate = versionInfo.jsonate ?: ""
+
+if (isNeo) useMixinExtras = false
 
 dependencies {
-    minecraft "net.minecraft:minecraft:${project.minecraft_version}"
-
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
     mappings loom.layered {
         officialMojangMappings()
         parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${parchmentVersion}@zip")
@@ -70,12 +106,19 @@ dependencies {
         forge "net.minecraftforge:forge:${project.minecraft_version}-${forgeVersion}"
     }
 
-    if (project.claim_integration) {
-        if (ftbChunks == "" || ftbLib == "") throw new IllegalStateException("Missing FTB dependency file IDs for version ${minecraft_version}")
+    if (useShadow) {
+        if (useMixinExtras) shadow(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixinextras_version}"))
+    }
+
+    if (claimIntegration) {
         modImplementation("curse.maven:ftb-chunks-forge-314906:${ftbChunks}")
         modImplementation("curse.maven:ftb-library-forge-404465:${ftbLib}")
         if (!isOld) modImplementation("curse.maven:open-parties-and-claims-636608:${opac}")
     }
+
+    if (embeddiumIntegration) modImplementation("curse.maven:embeddium-908741:${embeddium}")
+    if (useProvider) modImplementation("curse.maven:registrynameprovider-1321150:${provider}")
+    if (useJsonate) modImplementation("curse.maven:jsonate-1325790:${jsonate}")
 }
 
 processResources {
@@ -95,7 +138,7 @@ processResources {
 
 java {
     withSourcesJar()
-    def javaVer = isNeo ? JavaVersion.VERSION_21 : (isOld ? JavaVersion.VERSION_1_8 : JavaVersion.VERSION_17)
+    JavaVersion javaVer = isNeo ? JavaVersion.VERSION_21 : (isOld ? JavaVersion.VERSION_1_8 : JavaVersion.VERSION_17)
     sourceCompatibility = javaVer
     targetCompatibility = javaVer
 }
@@ -112,7 +155,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
 
-    def mainFile = upload(cf_project_id, remapJar)
+    UploadArtifact mainFile = upload(cf_project_id, remapJar)
     mainFile.displayName = "${archives_name}-${version}"
     mainFile.releaseType = "release"
     mainFile.changelog = currentChangeLog
@@ -120,8 +163,15 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     mainFile.addModLoader(isNeo ? "NeoForge" : "Forge")
     mainFile.addJavaVersion(javaVersions)
     mainFile.addGameVersion(minecraft_version)
+    if (claimIntegration) {
+        mainFile.addOptional("ftb-chunks-forge")
+        if (!isOld) mainFile.addOptional("open-parties-and-claims")
+    }
+    if (embeddiumIntegration) mainFile.addOptional("embeddium")
+    if (useProvider) mainFile.addRequirement("registrynameprovider")
+    if (useJsonate) mainFile.addRequirement("jsonate")
 
-    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+    UploadArtifact sourcesFile = mainFile.withAdditionalFile(sourcesJar)
     sourcesFile.changelog = currentChangeLog
     sourcesFile.changelogType = "markdown"
 }

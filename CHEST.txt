@@ -1,4 +1,4 @@
-IEventBus modEventBus, Dist dist, ModContainer container
+IEventBus modBus, Dist dist, ModContainer container
 
 # Proxy
 systemProp.http.proxyHost=localhost
