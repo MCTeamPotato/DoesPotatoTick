@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements Tickable {
@@ -22,11 +22,11 @@ public abstract class EntityMixin implements Tickable {
         return this.client$isTickable;
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
-    private void onClientTick(CallbackInfo ci) {
+    @Inject(method = "shouldRender", at = @At("RETURN"))
+    private void onClientTick(CallbackInfoReturnable<Boolean> cir) {
         if (this.level().isClientSide()) {
             this.client$tickCount++;
-            int interval = PotatoConfig.ENTITY_TICKABLE_REFRESH_INTERVAL.get();
+            int interval = PotatoConfig.ENTITY_RENDERABLE_REFRESH_INTERVAL.get();
             if (this.client$tickCount >= interval) {
                 this.client$tickCount = 0;
 

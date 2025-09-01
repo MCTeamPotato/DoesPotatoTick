@@ -43,7 +43,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RAID_ENTITIES_MOD_ID_LIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_WHITELIST;
     public static final ForgeConfigSpec.BooleanValue STOP_RENDERING_SKIPPED_ENTITIES;
-    public static final ForgeConfigSpec.IntValue ENTITY_TICKABLE_REFRESH_INTERVAL;
+    public static final ForgeConfigSpec.IntValue ENTITY_RENDERABLE_REFRESH_INTERVAL;
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
@@ -89,7 +89,7 @@ public class PotatoConfig {
         builder.pop();
         builder.push("Client");
         STOP_RENDERING_SKIPPED_ENTITIES = builder.comment("If the tick of an entity is skipped by this mod, stop its client rendering so that players won't get it stuck in their worlds.").define("StopRenderingSkippedEntities", true);
-        ENTITY_TICKABLE_REFRESH_INTERVAL = builder.comment("How often (in ticks) the mod checks whether an entity should be ticked and rendered. Higher values might slightly improve performance (honestly, not very noticeable lol), but the updates will happen less frequently, so things might feel a bit less responsive.").defineInRange("EntityTickableRefreshInterval", 40, 0, Integer.MAX_VALUE);
+        ENTITY_RENDERABLE_REFRESH_INTERVAL = builder.comment("How often the mod checks if an entity should be ticked and rendered, counted in rendering calls instead of game ticks. Higher values mean it checks less often, which might save a tiny bit of performance (honestly, not super noticeable lol), but updates will feel a little slower.").defineInRange("EntityRenderableRefreshInterval", 60,0,Integer.MAX_VALUE);
         builder.pop();
         COMMON_CONFIG = builder.build();
     }
