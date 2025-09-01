@@ -1,7 +1,7 @@
 package me.kall.doespotatotick.common.api;
 
 public interface Tickable {
-    boolean doesPotatoTick$isTickable();
+    boolean doesPotatoTick$isRenderable();
 
     interface EntityType {
         boolean doesPotatoTick$shouldAlwaysTick();
