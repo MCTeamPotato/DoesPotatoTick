@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityRenderDispatcherMixin {
     @Inject(method = "shouldRender", at = @At("RETURN"), cancellable = true)
     private <E extends Entity> void onCheckRenderable(E entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && PotatoConfig.STOP_RENDERING_SKIPPED_ENTITIES.get() && !((Tickable)entity).doesPotatoTick$isTickable()) {
+        boolean stopRendering = PotatoConfig.STOP_RENDERING_SKIPPED_ENTITIES.get();
+        if (cir.getReturnValue() && stopRendering && !((Tickable)entity).doesPotatoTick$isTickable()) {
             cir.setReturnValue(false);
         }
     }

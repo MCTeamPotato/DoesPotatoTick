@@ -1,2 +1,3 @@
-# 5.3.0
-Introduce StopRenderingSkippedEntities config option (enabled by default)
+# 5.3.1
+- add config comment for StopRenderingSkippedEntities option
+- Add EntityTickableRefreshInterval config option (with comment)

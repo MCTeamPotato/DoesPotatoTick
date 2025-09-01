@@ -43,6 +43,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RAID_ENTITIES_MOD_ID_LIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_WHITELIST;
     public static final ForgeConfigSpec.BooleanValue STOP_RENDERING_SKIPPED_ENTITIES;
+    public static final ForgeConfigSpec.IntValue ENTITY_TICKABLE_REFRESH_INTERVAL;
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
@@ -85,15 +86,18 @@ public class PotatoConfig {
         builder.pop();
         builder.push("Misc");
         SEND_MESSAGE = builder.define("SendWarningMessageWhenPlayerLogIn", true);
-        STOP_RENDERING_SKIPPED_ENTITIES = builder.define("StopRenderingSkippedEntities", true);
+        builder.pop();
+        builder.push("Client");
+        STOP_RENDERING_SKIPPED_ENTITIES = builder.comment("If the tick of an entity is skipped by this mod, stop its client rendering so that players won't get it stuck in their worlds.").define("StopRenderingSkippedEntities", true);
+        ENTITY_TICKABLE_REFRESH_INTERVAL = builder.comment("How often (in ticks) the mod checks whether an entity should be ticked and rendered. Higher values might slightly improve performance (honestly, not very noticeable lol), but the updates will happen less frequently, so things might feel a bit less responsive.").defineInRange("EntityTickableRefreshInterval", 40, 0, Integer.MAX_VALUE);
         builder.pop();
         COMMON_CONFIG = builder.build();
     }
 
-    private static volatile Set<ResourceLocation> dims = null;
-    private static volatile Set<Item> items = null;
-    private static volatile int maxDistSquared = 0;
-    private static volatile int maxHeight = 0;
+    private static Set<ResourceLocation> dims = null;
+    private static Set<Item> items = null;
+    private static int maxDistSquared = 0;
+    private static int maxHeight = 0;
 
     public static Set<ResourceLocation> getDimensions() {
         if (dims == null) dims = DIMENSION_WHITELIST.get().stream().map(ResourceLocation::parse).collect(Collectors.toSet());
