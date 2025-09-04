@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements Tickable {
     @Unique private int client$renderCallCount;
-    @Unique private volatile boolean client$isRenderable;
+    @Unique private volatile boolean client$isRenderable = true;
 
     @Override
     public boolean doesPotatoTick$isRenderable() {
