@@ -45,6 +45,7 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.BooleanValue STOP_RENDERING_SKIPPED_ENTITIES;
     public static final ForgeConfigSpec.IntValue ENTITY_RENDERABLE_REFRESH_INTERVAL;
     public static final ForgeConfigSpec.BooleanValue USE_AVG_FPS_AS_REFRESH_INTERVAL;
+    public static final ForgeConfigSpec.BooleanValue ONLY_WORKS_ON_SERVER_THREAD;
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
@@ -87,6 +88,7 @@ public class PotatoConfig {
         builder.pop();
         builder.push("Misc");
         SEND_MESSAGE = builder.define("SendWarningMessageWhenPlayerLogIn", true);
+        ONLY_WORKS_ON_SERVER_THREAD = builder.comment("If enabled, entities ticking in other threads will not be affected").define("OnlyWorksOnServerThread", true);
         builder.pop();
         builder.push("Client");
         STOP_RENDERING_SKIPPED_ENTITIES = builder.comment("If the tick of an entity is skipped by this mod, stop its client rendering so that players won't get it stuck in their worlds.").define("StopRenderingSkippedEntities", true);
