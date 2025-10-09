@@ -3,6 +3,7 @@ package me.kall.doespotatotick;
 import me.kall.doespotatotick.common.api.IRaids;
 import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.config.PotatoConfig;
+import me.kall.doespotatotick.common.data.PlayerTracker;
 import me.kall.doespotatotick.common.integration.ClaimManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -32,10 +33,13 @@ public final class DoesPotatoTick {
         context.registerConfig(ModConfig.Type.COMMON, PotatoConfig.COMMON_CONFIG);
         context.getModEventBus().addListener(PotatoConfig::setupConfig);
         MinecraftForge.EVENT_BUS.addListener(PotatoConfig::warn);
+        MinecraftForge.EVENT_BUS.addListener(PlayerTracker::onLevelTick);
     }
 
-    public static boolean isTickable(Entity entity) {
+    public static boolean isTickable(@NotNull Entity entity) {
+        if (entity.isAlwaysTicking()) return true;
         if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
+        if (entity instanceof FallingBlockEntity) return true;
         if (entity instanceof Projectile && PotatoConfig.IGNORE_PROJECTILE_ENTITIES.get()) return true;
         if (entity instanceof ItemEntity && PotatoConfig.IGNORE_ITEM_ENTITIES.get()) return true;
         if (entity instanceof LivingEntity living) {
@@ -49,23 +53,22 @@ public final class DoesPotatoTick {
         BlockPos entityPos = entity.blockPosition();
         EntityType<?> entityType = entity.getType();
 
-        if (((Tickable.EntityType)entityType).doesPotatoTick$shouldAlwaysTick()) return true;
+        if (((Tickable.EntityType)entityType).dpt$alwaysTick()) return true;
 
-        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Level)level).doesPotatoTick$isInOptimizableDimension()) return true;
+        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Level)level).dpt$optimizableDim()) return true;
 
         if (ClaimManager.isClaimed(level, entityPos)) return true;
-        if (entity instanceof FallingBlockEntity) return true;
 
         if (level instanceof ServerLevel serverLevel) {
-            if (PotatoConfig.ALLOW_TICKING_FORCE_LOADED.get() && serverLevel.getForcedChunks().contains(ChunkPos.asLong(entityPos))) return true;
-            if (((IRaids)serverLevel.getRaids()).doesPotatoTick$hasRaid()) {
-                if (entity instanceof Raider && PotatoConfig.TICKING_RAIDER_ENTITIES_IN_RAID.get()) return true;
-                if (((Tickable.EntityType)entityType).doesPotatoTick$shouldAlwaysTickInRaid()) return true;
+            if (serverLevel.getForcedChunks().contains(ChunkPos.asLong(entityPos))) return true;
+            if (((IRaids)serverLevel.getRaids()).dpt$hasRaid()) {
+                if (entity instanceof Raider && PotatoConfig.TICKING_RAIDER_ENTITIES_WHEN_RAID.get()) return true;
+                if (((Tickable.EntityType)entityType).dpt$alwaysTickInRaid()) return true;
             }
         }
 
         if (PotatoConfig.OPTIMIZE_ITEM_MOVEMENT.get() && entity instanceof ItemEntity itemEntity && !PotatoConfig.getItems().contains(itemEntity.getItem().getItem())) return ThreadLocalRandom.current().nextBoolean();
 
-        return PotatoConfig.isNearPlayer(level, entityPos);
+        return PlayerTracker.isEntityNearPlayers(level.dimension().location(), entity.getBlockY(), entity.chunkPosition().toLong());
     }
 }

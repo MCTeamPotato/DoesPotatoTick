@@ -5,13 +5,10 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.integration.ClaimManager;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -31,11 +28,10 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.BooleanValue IGNORE_HOSTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PROJECTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_ITEM_ENTITIES;
-    public static final ForgeConfigSpec.BooleanValue TICKING_RAIDER_ENTITIES_IN_RAID;
+    public static final ForgeConfigSpec.BooleanValue TICKING_RAIDER_ENTITIES_WHEN_RAID;
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ENTITIES_TICKING;
     public static final ForgeConfigSpec.BooleanValue ONLY_LIVING_OPTIMIZABLE;
     public static final ForgeConfigSpec.BooleanValue SEND_MESSAGE;
-    public static final ForgeConfigSpec.BooleanValue ALLOW_TICKING_FORCE_LOADED;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITIES_WHITELIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_WHITELIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITIES_MOD_ID_WHITELIST;
@@ -43,13 +39,11 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RAID_ENTITIES_MOD_ID_LIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_WHITELIST;
     public static final ForgeConfigSpec.BooleanValue STOP_RENDERING_SKIPPED_ENTITIES;
-    public static final ForgeConfigSpec.IntValue ENTITY_RENDERABLE_REFRESH_INTERVAL;
-    public static final ForgeConfigSpec.BooleanValue USE_AVG_FPS_AS_REFRESH_INTERVAL;
     public static final ForgeConfigSpec.BooleanValue ONLY_WORKS_ON_SERVER_THREAD;
 
     static {
         List<? extends String> itemList = Lists.newArrayList("minecraft:cobblestone");
-        List<? extends String> entityModIdList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks");
+        List<? extends String> entityModIdList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks" , "valkyrienskies", "vs_eureka");
         List<? extends String> entityWhiteList = Lists.newArrayList("minecraft:ender_dragon", "minecraft:ghast", "minecraft:wither", "minecraft:player",
                 "alexsmobs:void_worm", "alexsmobs:void_worm_part", "alexsmobs:spectre",
                 "twilightforest:naga", "twilightforest:lich", "twilightforest:yeti", "twilightforest:snow_queen", "twilightforest:minoshroom", "twilightforest:hydra", "twilightforest:knight_phantom", "twilightforest:ur_ghast",
@@ -66,15 +60,14 @@ public class PotatoConfig {
 
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         builder.comment("DoesPotatoTick?").push("Living Entities Tick Settings");
-        OPTIMIZE_ENTITIES_TICKING = builder.comment("If you disable this, entities will not stop ticking when they'are far from you, this mod may be useless for you too").define("OptimizeEntitiesTicking", true);
-        LIVING_HORIZONTAL_TICK_DIST = builder.defineInRange("LivingEntitiesMaxHorizontalTickDistance", 64, 1, Integer.MAX_VALUE);
-        LIVING_VERTICAL_TICK_DIST = builder.defineInRange("LivingEntitiesMaxVerticalTickDistance", 32, 1, Integer.MAX_VALUE);
+        OPTIMIZE_ENTITIES_TICKING = builder.comment("If you disable this, entities will not stop ticking when they're far from you, this mod may be useless for you too").define("OptimizeEntitiesTicking", true);
+        LIVING_HORIZONTAL_TICK_DIST = builder.defineInRange("LivingEntitiesMaxHorizontalTickDistanceInChunks", 4, 1, Integer.MAX_VALUE);
+        LIVING_VERTICAL_TICK_DIST = builder.defineInRange("LivingEntitiesMaxVerticalTickDistanceInChunks", 2, 1, Integer.MAX_VALUE);
         ENTITIES_WHITELIST = builder.comment("If you don't want an entity to be affected by the optimization, you can write its registry name down here.").defineList("EntitiesWhitelist", entityWhiteList, Predicates.alwaysTrue());
         ENTITIES_MOD_ID_WHITELIST = builder.comment("If you don't want entities of a mod to be affected by the optimization, you can write its modid down here").defineList("EntitiesModIDWhiteList", entityModIdList, Predicates.alwaysTrue());
-        TICKING_RAIDER_ENTITIES_IN_RAID = builder.comment("With this turned on, all the raider will always tick if the world has raids").define("TickRaidersIfRaid", true);
+        TICKING_RAIDER_ENTITIES_WHEN_RAID = builder.comment("With this turned on, all the raider will always tick if the world has raids").define("TickRaidersIfRaid", true);
         RAID_ENTITIES_WHITELIST = builder.comment("Similar to entity whitelist, but only take effect in raid.").defineList("RaidEntitiesWhiteList", ObjectArrayList.wrap(new String[]{"minecraft:witch", "minecraft:vex"}), Predicates.alwaysTrue());
         RAID_ENTITIES_MOD_ID_LIST = builder.comment("Similar to entity modID whitelist, but only take effect in raid").defineList("RaidEntitiesModIDWhiteList", new ObjectArrayList<>(), Predicates.alwaysTrue());
-        ALLOW_TICKING_FORCE_LOADED = builder.comment("Allow ticking of entities in force loaded chunks").define("AllowForceLoaded", true);
         DIMENSION_WHITELIST = builder.comment("Leave this empty for applying to all the dimensions", "Entities in these dimensions will be affected by the optimization").defineList("DimensionWhitelist", new ObjectArrayList<>(), Predicates.alwaysTrue());
         IGNORE_DEAD_ENTITIES = builder.comment("If this is enabled, dead entities will always tick").define("IgnoreDeadEntities", false);
         IGNORE_HOSTILE_ENTITIES = builder.comment("If this is enabled, hostile entities will always tick").define("IgnoreHostileEntities", false);
@@ -92,16 +85,24 @@ public class PotatoConfig {
         builder.pop();
         builder.push("Client");
         STOP_RENDERING_SKIPPED_ENTITIES = builder.comment("If the tick of an entity is skipped by this mod, stop its client rendering so that players won't get it stuck in their worlds.").define("StopRenderingSkippedEntities", true);
-        ENTITY_RENDERABLE_REFRESH_INTERVAL = builder.comment("How often the mod checks if an entity should be ticked and rendered, counted in rendering calls instead of game ticks. Higher values mean it checks less often, which might save a tiny bit of performance (honestly, not super noticeable lol), but updates will feel a little slower.").defineInRange("EntityRenderableRefreshInterval", 60,0,Integer.MAX_VALUE);
-        USE_AVG_FPS_AS_REFRESH_INTERVAL = builder.comment("Use client's average fps as EntityRenderableRefreshInterval.").define("UseAvgFpsAsRefreshInterval", true);
         builder.pop();
         COMMON_CONFIG = builder.build();
     }
 
     private static Set<ResourceLocation> dims = null;
     private static Set<Item> items = null;
-    private static int maxDistSquared = 0;
-    private static int maxHeight = 0;
+    private static int horizontal = 0;
+    private static int vertical = 0;
+
+    public static int getHorizontal() {
+        if (horizontal == 0) horizontal = LIVING_HORIZONTAL_TICK_DIST.get();
+        return horizontal;
+    }
+
+    public static int getVertical() {
+        if (vertical == 0) vertical = LIVING_VERTICAL_TICK_DIST.get();
+        return vertical;
+    }
 
     public static Set<ResourceLocation> getDimensions() {
         if (dims == null) dims = DIMENSION_WHITELIST.get().stream().map(ResourceLocation::parse).collect(Collectors.toSet());
@@ -122,8 +123,8 @@ public class PotatoConfig {
             for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES) {
                 ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
                 if (id != null) {
-                    if (ENTITIES_WHITELIST.get().contains(id.toString()) || ENTITIES_MOD_ID_WHITELIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).doesPotatoTick$setShouldAlwaysTick();
-                    if (RAID_ENTITIES_WHITELIST.get().contains(id.toString()) || RAID_ENTITIES_MOD_ID_LIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).doesPotatoTick$setShouldAlwaysTickInRaid();
+                    if (ENTITIES_WHITELIST.get().contains(id.toString()) || ENTITIES_MOD_ID_WHITELIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).dpt$setAsAlwaysTick();
+                    if (RAID_ENTITIES_WHITELIST.get().contains(id.toString()) || RAID_ENTITIES_MOD_ID_LIST.get().contains(id.getNamespace())) ((Tickable.EntityType)entityType).dpt$setAlwaysTickInRaid();
                 }
             }
         });
@@ -144,31 +145,5 @@ public class PotatoConfig {
                 event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.notfound"), false);
             }
         }
-    }
-
-    private static int maxDistSquared() {
-        if (maxDistSquared == 0) maxDistSquared =PotatoConfig.LIVING_HORIZONTAL_TICK_DIST.get() * PotatoConfig.LIVING_HORIZONTAL_TICK_DIST.get();
-        return maxDistSquared;
-    }
-
-    private static int maxHeight() {
-        if (maxHeight == 0) maxHeight = LIVING_VERTICAL_TICK_DIST.get();
-        return maxHeight;
-    }
-
-    public static boolean isNearPlayer(@NotNull Level level, @NotNull BlockPos pos) {
-        int posX = pos.getX();
-        int posY = pos.getY();
-        int posZ = pos.getZ();
-        int maxHeight = maxHeight();
-        int maxDistSquared = maxDistSquared();
-        for (Player player : level.players()) {
-            if (Math.abs(player.getY() - posY) < maxHeight) {
-                double x = player.getX() - posX;
-                double z = player.getZ() - posZ;
-                if ((x * x + z * z) < maxDistSquared) return true;
-            }
-        }
-        return false;
     }
 }

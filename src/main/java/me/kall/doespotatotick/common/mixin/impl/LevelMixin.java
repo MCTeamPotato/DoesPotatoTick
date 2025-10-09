@@ -22,18 +22,18 @@ public abstract class LevelMixin implements Tickable.Level {
     @Unique private boolean doesPotatoTick$isInOptimizableDimension;
 
     @Override
-    public boolean doesPotatoTick$isInOptimizableDimension() {
+    public boolean dpt$optimizableDim() {
         return this.doesPotatoTick$isInOptimizableDimension;
     }
 
     @Override
-    public void doesPotatoTick$setIsInOptimizableDimension() {
+    public void dpt$setAsOptimizable() {
         this.doesPotatoTick$isInOptimizableDimension = true;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates, CallbackInfo ci) {
         if (dimension == null) return;
-        if (PotatoConfig.getDimensions().contains(dimension.location())) this.doesPotatoTick$setIsInOptimizableDimension();
+        if (PotatoConfig.getDimensions().contains(dimension.location())) this.dpt$setAsOptimizable();
     }
 }

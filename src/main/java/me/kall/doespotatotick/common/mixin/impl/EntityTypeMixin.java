@@ -7,25 +7,25 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(EntityType.class)
 public abstract class EntityTypeMixin implements Tickable.EntityType {
-    @Unique private boolean doesPotatoTick$shouldAlwaysTick, doesPotatoTick$shouldAlwaysTickInRaid;
+    @Unique private boolean dpt$alwaysTick, dpt$alwaysTickInRaid;
 
     @Override
-    public boolean doesPotatoTick$shouldAlwaysTick() {
-        return this.doesPotatoTick$shouldAlwaysTick;
+    public boolean dpt$alwaysTick() {
+        return this.dpt$alwaysTick;
     }
 
     @Override
-    public void doesPotatoTick$setShouldAlwaysTick() {
-        this.doesPotatoTick$shouldAlwaysTick = true;
+    public void dpt$setAsAlwaysTick() {
+        this.dpt$alwaysTick = true;
     }
 
     @Override
-    public boolean doesPotatoTick$shouldAlwaysTickInRaid() {
-        return this.doesPotatoTick$shouldAlwaysTickInRaid;
+    public boolean dpt$alwaysTickInRaid() {
+        return this.dpt$alwaysTickInRaid;
     }
 
     @Override
-    public void doesPotatoTick$setShouldAlwaysTickInRaid() {
-        this.doesPotatoTick$shouldAlwaysTickInRaid = true;
+    public void dpt$setAlwaysTickInRaid() {
+        this.dpt$alwaysTickInRaid = true;
     }
 }

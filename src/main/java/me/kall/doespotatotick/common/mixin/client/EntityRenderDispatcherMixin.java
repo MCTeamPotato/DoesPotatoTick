@@ -1,4 +1,4 @@
-package me.kall.doespotatotick.common.mixin;
+package me.kall.doespotatotick.common.mixin.client;
 
 import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.config.PotatoConfig;
@@ -15,7 +15,7 @@ public abstract class EntityRenderDispatcherMixin {
     @Inject(method = "shouldRender", at = @At("RETURN"), cancellable = true)
     private <E extends Entity> void onCheckRenderable(E entity, Frustum frustum, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
         if (!PotatoConfig.STOP_RENDERING_SKIPPED_ENTITIES.get()) return;
-        if (cir.getReturnValue() && !((Tickable)entity).doesPotatoTick$isRenderable()) {
+        if (cir.getReturnValue() && !((Tickable)entity).dpt$tickable()) {
             cir.setReturnValue(false);
         }
     }

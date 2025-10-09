@@ -14,7 +14,7 @@ public abstract class RaidsMixin implements IRaids {
     @Shadow @Final private Map<Integer, Raid> raidMap;
 
     @Override
-    public boolean doesPotatoTick$hasRaid() {
+    public boolean dpt$hasRaid() {
         return !this.raidMap.isEmpty();
     }
 }

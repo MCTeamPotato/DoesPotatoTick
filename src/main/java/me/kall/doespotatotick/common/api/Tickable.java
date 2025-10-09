@@ -1,17 +1,18 @@
 package me.kall.doespotatotick.common.api;
 
 public interface Tickable {
-    boolean doesPotatoTick$isRenderable();
+    boolean dpt$tickable();
+    void dpt$setTickable(boolean renderable);
 
     interface EntityType {
-        boolean doesPotatoTick$shouldAlwaysTick();
-        void doesPotatoTick$setShouldAlwaysTick();
-        boolean doesPotatoTick$shouldAlwaysTickInRaid();
-        void doesPotatoTick$setShouldAlwaysTickInRaid();
+        boolean dpt$alwaysTick();
+        void dpt$setAsAlwaysTick();
+        boolean dpt$alwaysTickInRaid();
+        void dpt$setAlwaysTickInRaid();
     }
 
     interface Level {
-        boolean doesPotatoTick$isInOptimizableDimension();
-        void doesPotatoTick$setIsInOptimizableDimension();
+        boolean dpt$optimizableDim();
+        void dpt$setAsOptimizable();
     }
 }

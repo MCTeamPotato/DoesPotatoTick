@@ -7,12 +7,11 @@
   },
   "minVersion": "0.8",
   "client": [
-    "EntityRenderDispatcherMixin",
-    "MinecraftMixin"
+    "client.EntityRenderDispatcherMixin"
   ],
   "mixins": [
-    "EntityMixin",
-    "LevelMixin",
+    "core.LevelMixin",
+    "impl.EntityMixin",
     "impl.EntityTypeMixin",
     "impl.LevelMixin",
     "impl.RaidsMixin"

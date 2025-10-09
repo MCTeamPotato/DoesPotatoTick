@@ -1,6 +1,7 @@
-package me.kall.doespotatotick.common.mixin;
+package me.kall.doespotatotick.common.mixin.core;
 
 import me.kall.doespotatotick.DoesPotatoTick;
+import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.config.PotatoConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +22,8 @@ public abstract class LevelMixin {
             if (!(level instanceof ServerLevel)) return;
             if (!((ServerLevel)level).getServer().isSameThread()) return;
         }
-        if (DoesPotatoTick.isTickable(entity)) return;
+        ((Tickable)entity).dpt$setTickable(DoesPotatoTick.isTickable(entity));
+        if (((Tickable)entity).dpt$tickable()) return;
         ci.cancel();
     }
 }
