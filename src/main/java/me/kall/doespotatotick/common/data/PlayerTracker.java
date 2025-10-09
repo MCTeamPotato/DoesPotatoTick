@@ -1,6 +1,5 @@
 package me.kall.doespotatotick.common.data;
 
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerTracker {
-    public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<Pair<Integer, Integer>>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
+    public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<MinMaxData>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
 
     public static void onLevelTick(TickEvent.@NotNull LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
@@ -31,7 +30,7 @@ public class PlayerTracker {
 
         ResourceLocation dimId = level.dimension().location();
 
-        Long2ObjectMap<Pair<Integer, Integer>> chunkMap = ACTIVE_CHUNKS.computeIfAbsent(dimId, k -> new Long2ObjectOpenHashMap<>());
+        Long2ObjectMap<MinMaxData> chunkMap = ACTIVE_CHUNKS.computeIfAbsent(dimId, k -> new Long2ObjectOpenHashMap<>());
         chunkMap.clear();
 
         int horizontalRadius = PotatoConfig.getHorizontal();
@@ -47,13 +46,13 @@ public class PlayerTracker {
                 for (int dz = -horizontalRadius; dz <= horizontalRadius; dz++) {
                     long chunkKey = ChunkPos.asLong(center.x + dx, center.z + dz);
 
-                    Pair<Integer, Integer> existing = chunkMap.get(chunkKey);
+                    MinMaxData existing = chunkMap.get(chunkKey);
                     if (existing == null) {
-                        chunkMap.put(chunkKey, Pair.of(minY, maxY));
+                        chunkMap.put(chunkKey, new MinMaxData(minY, maxY));
                     } else {
-                        int newMin = Math.min(existing.getFirst(), minY);
-                        int newMax = Math.max(existing.getSecond(), maxY);
-                        chunkMap.put(chunkKey, Pair.of(newMin, newMax));
+                        int newMin = Math.min(existing.min, minY);
+                        int newMax = Math.max(existing.max, maxY);
+                        chunkMap.put(chunkKey, new MinMaxData(newMin, newMax));
                     }
                 }
             }
@@ -61,12 +60,22 @@ public class PlayerTracker {
     }
 
     public static boolean isEntityNearPlayers(@NotNull ResourceLocation dimId, int entityY, long chunkKey) {
-        Long2ObjectMap<Pair<Integer, Integer>> chunkMap = ACTIVE_CHUNKS.get(dimId);
+        final Long2ObjectMap<MinMaxData> chunkMap = ACTIVE_CHUNKS.get(dimId);
         if (chunkMap == null) return false;
 
-        Pair<Integer, Integer> minMax = chunkMap.get(chunkKey);
+        final MinMaxData minMax = chunkMap.get(chunkKey);
         if (minMax == null) return false;
 
-        return entityY >= minMax.getFirst() && entityY <= minMax.getSecond();
+        return entityY >= minMax.min && entityY <= minMax.max;
+    }
+
+    public static final class MinMaxData {
+        public final int min;
+        public final int max;
+
+        private MinMaxData(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
     }
 }
