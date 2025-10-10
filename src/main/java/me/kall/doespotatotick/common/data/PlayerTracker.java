@@ -2,7 +2,9 @@ package me.kall.doespotatotick.common.data;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.*;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.doespotatotick.common.config.PotatoConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -12,12 +14,11 @@ import net.minecraftforge.event.TickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerTracker {
     public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<YRange>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
 
-    public static final Set<ResourceLocation> UPDATE_REQUIRED = ConcurrentHashMap.newKeySet();
+    public static final Set<ResourceLocation> UPDATE_REQUIRED = new ObjectOpenHashSet<>();
 
     public static void onLevelTick(TickEvent.@NotNull LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
