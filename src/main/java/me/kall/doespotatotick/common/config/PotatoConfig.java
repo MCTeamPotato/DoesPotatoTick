@@ -7,8 +7,10 @@ import me.kall.doespotatotick.common.api.Tickable;
 import me.kall.doespotatotick.common.integration.ClaimManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -145,5 +147,9 @@ public class PotatoConfig {
                 event.getEntity().displayClientMessage(Component.translatable("doespotatotick.warn.notfound"), false);
             }
         }
+    }
+
+    public static boolean threadSupported(Level level) {
+        return !PotatoConfig.ONLY_WORKS_ON_SERVER_THREAD.get() || (level instanceof ServerLevel && ((ServerLevel) level).getServer().isSameThread());
     }
 }
