@@ -2,35 +2,35 @@ package me.kall.doespotatotick.common.data;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.*;
 import me.kall.doespotatotick.common.config.PotatoConfig;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class PlayerTracker {
-    public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<MinMaxData>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
+    public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<YRange>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
+
+    public static final Set<ResourceLocation> UPDATE_REQUIRED = ConcurrentHashMap.newKeySet();
 
     public static void onLevelTick(TickEvent.@NotNull LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
 
         Level level = event.level;
 
-        if (PotatoConfig.ONLY_WORKS_ON_SERVER_THREAD.get()) {
-            if (event.side == LogicalSide.CLIENT) return;
-            if (!(level instanceof ServerLevel serverLevel)) return;
-            if (!serverLevel.getServer().isSameThread()) return;
-        }
+        if (!PotatoConfig.threadSupported(level)) return;
 
         ResourceLocation dimId = level.dimension().location();
 
-        Long2ObjectMap<MinMaxData> chunkMap = ACTIVE_CHUNKS.computeIfAbsent(dimId, k -> new Long2ObjectOpenHashMap<>());
+        if (!UPDATE_REQUIRED.remove(dimId)) return;
+
+        Long2ObjectMap<YRange> chunkMap = ACTIVE_CHUNKS.computeIfAbsent(dimId, k -> new Long2ObjectOpenHashMap<>());
         chunkMap.clear();
 
         int horizontalRadius = PotatoConfig.getHorizontal();
@@ -46,13 +46,13 @@ public class PlayerTracker {
                 for (int dz = -horizontalRadius; dz <= horizontalRadius; dz++) {
                     long chunkKey = ChunkPos.asLong(center.x + dx, center.z + dz);
 
-                    MinMaxData existing = chunkMap.get(chunkKey);
-                    if (existing == null) {
-                        chunkMap.put(chunkKey, new MinMaxData(minY, maxY));
+                    YRange yRange = chunkMap.get(chunkKey);
+                    if (yRange == null) {
+                        yRange = new YRange(minY, maxY);
+                        chunkMap.put(chunkKey, yRange);
                     } else {
-                        int newMin = Math.min(existing.min, minY);
-                        int newMax = Math.max(existing.max, maxY);
-                        chunkMap.put(chunkKey, new MinMaxData(newMin, newMax));
+                        if (minY < yRange.min) yRange.min = minY;
+                        if (maxY > yRange.max) yRange.max = maxY;
                     }
                 }
             }
@@ -60,20 +60,20 @@ public class PlayerTracker {
     }
 
     public static boolean isEntityNearPlayers(@NotNull ResourceLocation dimId, int entityY, long chunkKey) {
-        final Long2ObjectMap<MinMaxData> chunkMap = ACTIVE_CHUNKS.get(dimId);
+        final Long2ObjectMap<YRange> chunkMap = ACTIVE_CHUNKS.get(dimId);
         if (chunkMap == null) return false;
 
-        final MinMaxData minMax = chunkMap.get(chunkKey);
-        if (minMax == null) return false;
+        final YRange yRange = chunkMap.get(chunkKey);
+        if (yRange == null) return false;
 
-        return entityY >= minMax.min && entityY <= minMax.max;
+        return entityY >= yRange.min && entityY <= yRange.max;
     }
 
-    public static final class MinMaxData {
-        public final int min;
-        public final int max;
+    public static final class YRange {
+        public int min;
+        public int max;
 
-        private MinMaxData(int min, int max) {
+        private YRange(int min, int max) {
             this.min = min;
             this.max = max;
         }
