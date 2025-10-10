@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.doespotatotick.common.config.PotatoConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -13,23 +12,16 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 public class PlayerTracker {
     public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<YRange>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
-
-    public static final Set<ResourceLocation> UPDATE_REQUIRED = new ObjectOpenHashSet<>();
 
     public static void onLevelTick(TickEvent.@NotNull LevelTickEvent event) {
         if (event.phase != TickEvent.Phase.START) return;
 
         Level level = event.level;
-
         if (!PotatoConfig.threadSupported(level)) return;
 
         ResourceLocation dimId = level.dimension().location();
-
-        if (!UPDATE_REQUIRED.remove(dimId)) return;
 
         Long2ObjectMap<YRange> chunkMap = ACTIVE_CHUNKS.computeIfAbsent(dimId, k -> new Long2ObjectOpenHashMap<>());
         chunkMap.clear();
