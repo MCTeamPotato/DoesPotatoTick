@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 
 @Mixin(Level.class)
 public abstract class LevelMixin implements Tickable.Level {
-    @Unique private boolean doesPotatoTick$isInOptimizableDimension;
+    @Unique private boolean dpt$optimizable;
 
     @Override
     public boolean dpt$optimizableDim() {
-        return this.doesPotatoTick$isInOptimizableDimension;
+        return this.dpt$optimizable;
     }
 
     @Override
     public void dpt$setAsOptimizable() {
-        this.doesPotatoTick$isInOptimizableDimension = true;
+        this.dpt$optimizable = true;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
