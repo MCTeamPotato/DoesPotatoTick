@@ -1,2 +1,2 @@
-# 5.4.1
-- Reduce allocation and unnecessary rebuild in PlayerTracker
+# 5.4.2
+- Replaced repetitive runtime checks with a memoized Supplier<Boolean> to cache per-entity tickability.

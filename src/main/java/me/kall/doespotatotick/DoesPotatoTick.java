@@ -10,10 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -37,17 +34,8 @@ public final class DoesPotatoTick {
     }
 
     public static boolean isTickable(@NotNull Entity entity) {
-        if (entity.isAlwaysTicking()) return true;
-        if (!PotatoConfig.OPTIMIZE_ENTITIES_TICKING.get()) return true;
-        if (entity instanceof FallingBlockEntity) return true;
-        if (entity instanceof Projectile && PotatoConfig.IGNORE_PROJECTILE_ENTITIES.get()) return true;
-        if (entity instanceof ItemEntity && PotatoConfig.IGNORE_ITEM_ENTITIES.get()) return true;
-        if (entity instanceof LivingEntity living) {
-            if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && living.isDeadOrDying()) return true;
-            if (PotatoConfig.IGNORE_HOSTILE_ENTITIES.get() && (living instanceof Enemy)) return true;
-        } else {
-            if (PotatoConfig.ONLY_LIVING_OPTIMIZABLE.get()) return true;
-        }
+        if (((Tickable)entity).dpt$alwaysTick()) return true;
+        if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && entity instanceof LivingEntity && ((LivingEntity) entity).isDeadOrDying()) return true;
 
         Level level = entity.level();
         BlockPos entityPos = entity.blockPosition();
@@ -55,7 +43,7 @@ public final class DoesPotatoTick {
 
         if (((Tickable.EntityType)entityType).dpt$alwaysTick()) return true;
 
-        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Level)level).dpt$optimizableDim()) return true;
+        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Dim)level).dpt$optimizableDim()) return true;
 
         if (ClaimManager.isClaimed(level, entityPos)) return true;
 

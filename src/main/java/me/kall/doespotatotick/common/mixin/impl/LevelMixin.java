@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements Tickable.Level {
+public abstract class LevelMixin implements Tickable.Dim {
     @Unique private boolean dpt$optimizable;
 
     @Override

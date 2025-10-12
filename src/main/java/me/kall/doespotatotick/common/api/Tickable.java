@@ -4,6 +4,8 @@ public interface Tickable {
     boolean dpt$tickable();
     void dpt$setTickable(boolean renderable);
 
+    boolean dpt$alwaysTick();
+
     interface EntityType {
         boolean dpt$alwaysTick();
         void dpt$setAsAlwaysTick();
@@ -11,7 +13,7 @@ public interface Tickable {
         void dpt$setAlwaysTickInRaid();
     }
 
-    interface Level {
+    interface Dim {
         boolean dpt$optimizableDim();
         void dpt$setAsOptimizable();
     }
