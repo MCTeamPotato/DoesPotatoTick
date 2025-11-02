@@ -26,7 +26,6 @@ public class PotatoConfig {
     public static final ForgeConfigSpec.IntValue LIVING_HORIZONTAL_TICK_DIST;
     public static final ForgeConfigSpec.IntValue LIVING_VERTICAL_TICK_DIST;
     public static final ForgeConfigSpec.BooleanValue OPTIMIZE_ITEM_MOVEMENT;
-    public static final ForgeConfigSpec.BooleanValue IGNORE_DEAD_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_HOSTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PROJECTILE_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue IGNORE_ITEM_ENTITIES;
@@ -71,7 +70,6 @@ public class PotatoConfig {
         RAID_ENTITIES_WHITELIST = builder.comment("Similar to entity whitelist, but only take effect in raid.").defineList("RaidEntitiesWhiteList", ObjectArrayList.wrap(new String[]{"minecraft:witch", "minecraft:vex"}), Predicates.alwaysTrue());
         RAID_ENTITIES_MOD_ID_LIST = builder.comment("Similar to entity modID whitelist, but only take effect in raid").defineList("RaidEntitiesModIDWhiteList", new ObjectArrayList<>(), Predicates.alwaysTrue());
         DIMENSION_WHITELIST = builder.comment("Leave this empty for applying to all the dimensions", "Entities in these dimensions will be affected by the optimization").defineList("DimensionWhitelist", new ObjectArrayList<>(), Predicates.alwaysTrue());
-        IGNORE_DEAD_ENTITIES = builder.comment("If this is enabled, dead entities will always tick").define("IgnoreDeadEntities", false);
         IGNORE_HOSTILE_ENTITIES = builder.comment("If this is enabled, hostile entities will always tick").define("IgnoreHostileEntities", false);
         IGNORE_PROJECTILE_ENTITIES = builder.comment("If this is enabled, projectiles will always tick").define("IgnoreProjectiles", true);
         ONLY_LIVING_OPTIMIZABLE = builder.comment("If this is enabled, optimization will only take effect on living entities").define("OnlyLivingOptimizable", false);

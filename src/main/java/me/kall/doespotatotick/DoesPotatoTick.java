@@ -35,7 +35,7 @@ public final class DoesPotatoTick {
 
     public static boolean isTickable(@NotNull Entity entity) {
         if (((Tickable)entity).dpt$alwaysTick()) return true;
-        if (PotatoConfig.IGNORE_DEAD_ENTITIES.get() && entity instanceof LivingEntity && ((LivingEntity) entity).isDeadOrDying()) return true;
+        if (entity instanceof LivingEntity && ((LivingEntity) entity).isDeadOrDying()) return true;
 
         Level level = entity.level();
         BlockPos entityPos = entity.blockPosition();
