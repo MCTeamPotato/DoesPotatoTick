@@ -1,2 +1,2 @@
-# 5.4.2
-- Replaced repetitive runtime checks with a memoized Supplier<Boolean> to cache per-entity tickability.
+# 5.4.3
+- Remove IgnoreDeadEntities config option. Now it's forced.
