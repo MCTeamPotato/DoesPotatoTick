@@ -71,5 +71,6 @@ public abstract class EntityMixin implements Tickable {
         this.dpt$setAlwaysTick(this.dpt$checkAlwaysTick());
     }
 
+    @Inject(method = "setPosRaw", at = @At("HEAD")) protected void beforePosChange(CallbackInfo ci) {}
     @Inject(method = "setPosRaw", at = @At("TAIL")) protected void afterPosChange(CallbackInfo ci) {}
 }
