@@ -57,7 +57,7 @@ public final class DoesPotatoTick {
         long chunk = entity.chunkPosition().toLong();
 
         if (tickable.dpt$alwaysTick()) return true;
-        if (entity instanceof LivingEntity living && ((LivingEntityAccessor)living).dpt$isDead()) return true;
+        if (entity instanceof LivingEntity living && (((LivingEntityAccessor)living).dpt$isDead() || living.isDeadOrDying())) return true;
         if (!tickableLevel.dpt$valid()) return true;
         if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
         if (level.getForcedChunks().contains(chunk)) return true;
