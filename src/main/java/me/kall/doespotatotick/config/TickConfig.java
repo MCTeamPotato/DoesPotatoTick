@@ -13,7 +13,6 @@ public class TickConfig {
     static final ForgeConfigSpec.BooleanValue ENTITY_OPTIMIZATION;
     static final ForgeConfigSpec.BooleanValue ONLY_LIVING, ONLY_ENEMIES, ONLY_ANIMALS, ONLY_WHEN_NO_RAIDS;
     static final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_TICK_ENTITIES, ALWAYS_TICK_ENTITIES_MOD_ID, ALWAYS_TICK_RAIDERS, VALID_DIMENSIONS;
-    static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE;
     static final ForgeConfigSpec.BooleanValue NOTIFICATION;
 
     static {
@@ -40,12 +39,6 @@ public class TickConfig {
 
         builder.push("Misc Settings");
         NOTIFICATION = builder.comment("If enabled, Does Potato Tick will send a client message to notify the login players about their mob farm.").define("Notification", true);
-        builder.pop();
-
-        builder.push("Client Settings");
-        SKIP_RENDERING_UNTICKABLE = builder
-                .comment("If true, entities that are not ticking will not be rendered on the client. Improves FPS.")
-                .define("StopRenderingUntickableEntities", true);
         builder.pop();
 
         builder.push("Entity Ticking Settings");
@@ -128,5 +121,23 @@ public class TickConfig {
         builder.pop();
         builder.pop();
         CONFIG = builder.build();
+    }
+
+    public static final class Client {
+        public static final ForgeConfigSpec CONFIG;
+        static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, BOW_SKIP;
+
+        static {
+            ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+            builder.push("DoesPotatoTickClientConfig");
+            SKIP_RENDERING_UNTICKABLE = builder
+                    .comment("If true, entities that are not ticking will not be rendered on the client. Improves FPS.", "You can also configure whether this option is invalidated when you are using bow/crossbow items.")
+                    .define("StopRenderingUntickableEntities", true);
+            BOW_SKIP = builder
+                    .comment("If true, entities will always be rendered even though they're not tickable when client players are charging bows/crossbows.")
+                    .define("RenderAllEntitiesWhenChargingBows", true);
+            builder.pop();
+            CONFIG = builder.build();
+        }
     }
 }

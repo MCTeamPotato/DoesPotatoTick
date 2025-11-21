@@ -3,6 +3,7 @@ package me.kall.doespotatotick;
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.config.TickConfig;
 import me.kall.doespotatotick.data.PlayerTracker;
+import me.kall.doespotatotick.events.ClientEvents;
 import me.kall.doespotatotick.events.ConfigEvents;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
@@ -15,10 +16,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -32,6 +35,7 @@ public final class DoesPotatoTick {
 
     public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.COMMON, TickConfig.CONFIG);
+        context.registerConfig(ModConfig.Type.CLIENT, TickConfig.Client.CONFIG);
 
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         IEventBus modBus = context.getModEventBus();
@@ -40,6 +44,12 @@ public final class DoesPotatoTick {
         modBus.addListener(ConfigEvents::loadConfig);
         forgeBus.addListener(ConfigEvents::warn);
         PlayerTracker.register(forgeBus);
+
+        if (FMLLoader.getDist().isClient()) {
+            forgeBus.addListener(ClientEvents::bowStart);
+            forgeBus.addListener((LivingEntityUseItemEvent.Stop event) -> ClientEvents.bowEnd(event));
+            forgeBus.addListener((LivingEntityUseItemEvent.Finish event) -> ClientEvents.bowEnd(event));
+        }
 
         CHANNEL.registerMessage(0, TickablePacket.class, TickablePacket::toBytes, TickablePacket::new, TickablePacket::handle);
     }

@@ -17,10 +17,12 @@ public class ConfigConstants {
     public static int verticalChunks, horizontalChunks;
     public static boolean ignoreEnemies, ignoreProjectiles, ignoreProjectileTargets, ignoreItems, ignoreRaidersIfRaiding, ignoreAnimals;
     public static boolean onlyLiving, onlyEnemies, onlyAnimals, onlyWhenNoRaids;
-    public static boolean skipRenderingUntickable;
     public static boolean notification;
     public static final Set<ResourceLocation> alwaysTickEntities = new ObjectOpenHashSet<>(), alwaysTickRaiders = new ObjectOpenHashSet<>(), validDimensions = new ObjectOpenHashSet<>();
     public static final Set<String> alwaysTickEntitiesModID = new ObjectOpenHashSet<>();
+
+    public static volatile boolean skipRenderingUntickable;
+    public static boolean bowSkip;
 
     public static void validate() {
         entityOptimizable = TickConfig.ENTITY_OPTIMIZATION.get();
@@ -36,7 +38,6 @@ public class ConfigConstants {
         onlyEnemies = TickConfig.ONLY_ENEMIES.get();
         onlyAnimals = TickConfig.ONLY_ANIMALS.get();
         onlyWhenNoRaids = TickConfig.ONLY_WHEN_NO_RAIDS.get();
-        skipRenderingUntickable = TickConfig.SKIP_RENDERING_UNTICKABLE.get();
         notification = TickConfig.NOTIFICATION.get();
 
         alwaysTickEntities.clear();
@@ -50,6 +51,13 @@ public class ConfigConstants {
         TickConfig.VALID_DIMENSIONS.get().stream().map(ResourceLocation::parse).forEach(validDimensions::add);
 
         alwaysTickSetup();
+
+        validateClient();
+    }
+
+    public static void validateClient() {
+        skipRenderingUntickable = TickConfig.Client.SKIP_RENDERING_UNTICKABLE.get();
+        bowSkip = TickConfig.Client.BOW_SKIP.get();
     }
 
     public static void alwaysTickSetup() {
@@ -65,6 +73,6 @@ public class ConfigConstants {
             }
         }
 
-        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer()).ifPresent(server -> server.getAllLevels().forEach(level -> level.getAllEntities().forEach(entity -> ((Tickable)entity).dpt$setAlwaysTick(((Tickable)entity).dpt$checkAlwaysTick()))));
+        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer()).ifPresent(server -> server.getAllLevels().forEach(level -> level.getEntities().getAll().forEach(entity -> ((Tickable)entity).dpt$setAlwaysTick(((Tickable)entity).dpt$checkAlwaysTick()))));
     }
 }
