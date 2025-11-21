@@ -16,7 +16,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -78,8 +77,6 @@ public class PlayerTracker {
                 }
             }
         }
-
-        LogManager.getLogger(PlayerTracker.class).info("Tick Map rebuilt. {}", ACTIVE_CHUNKS);
     }
 
     public static boolean include(ResourceLocation dimID, int entityHeight, long entityChunk) {
