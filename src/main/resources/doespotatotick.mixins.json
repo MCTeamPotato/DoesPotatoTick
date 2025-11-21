@@ -1,22 +1,25 @@
 {
   "required": true,
-  "package": "me.kall.doespotatotick.common.mixin",
+  "package": "me.kall.doespotatotick.mixin",
   "compatibilityLevel": "JAVA_8",
   "overwrites": {
     "conformVisibility": false
   },
   "minVersion": "0.8",
-  "client": [
-    "client.EntityRenderDispatcherMixin"
-  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
   "mixins": [
-    "core.LevelMixin",
+    "access.LivingEntityAccessor",
+    "access.RaidsAccessor",
     "impl.EntityMixin",
     "impl.EntityTypeMixin",
     "impl.LevelMixin",
-    "impl.RaidsMixin"
+    "impl.ProjectileMixin",
+    "impl.ServerPlayerMixin",
+    "impl.core.ServerLevelMixin"
   ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  "client": [
+    "client.EntityRenderDispatcherMixin"
+  ]
 }

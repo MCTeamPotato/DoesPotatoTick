@@ -1,62 +1,72 @@
 package me.kall.doespotatotick;
 
-import me.kall.doespotatotick.common.api.IRaids;
-import me.kall.doespotatotick.common.api.Tickable;
-import me.kall.doespotatotick.common.config.PotatoConfig;
-import me.kall.doespotatotick.common.data.PlayerTracker;
-import me.kall.doespotatotick.common.integration.ClaimManager;
-import net.minecraft.core.BlockPos;
+import me.kall.doespotatotick.config.ConfigConstants;
+import me.kall.doespotatotick.config.TickConfig;
+import me.kall.doespotatotick.data.PlayerTracker;
+import me.kall.doespotatotick.events.ConfigEvents;
+import me.kall.doespotatotick.ext.Tickable;
+import me.kall.doespotatotick.integration.ClaimManager;
+import me.kall.doespotatotick.mixin.access.LivingEntityAccessor;
+import me.kall.doespotatotick.network.TickablePacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 @Mod(DoesPotatoTick.MOD_ID)
 public final class DoesPotatoTick {
     public static final String MOD_ID = "doespotatotick";
 
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(MOD_ID, "main"), () -> "1", ver -> ver.equals("1"), ver -> ver.equals("1"));
+
     public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
-        context.registerConfig(ModConfig.Type.COMMON, PotatoConfig.COMMON_CONFIG);
-        context.getModEventBus().addListener(PotatoConfig::setupConfig);
-        MinecraftForge.EVENT_BUS.addListener(PotatoConfig::warn);
-        MinecraftForge.EVENT_BUS.addListener(PlayerTracker::onLevelTick);
+        context.registerConfig(ModConfig.Type.COMMON, TickConfig.CONFIG);
+
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        IEventBus modBus = context.getModEventBus();
+
+        modBus.addListener(ConfigEvents::reloadConfig);
+        modBus.addListener(ConfigEvents::loadConfig);
+        forgeBus.addListener(ConfigEvents::warn);
+        PlayerTracker.register(forgeBus);
+
+        CHANNEL.registerMessage(0, TickablePacket.class, TickablePacket::toBytes, TickablePacket::new, TickablePacket::handle);
     }
 
-    public static boolean isTickable(@NotNull Entity entity) {
-        if (((Tickable)entity).dpt$alwaysTick()) return true;
-        if (entity instanceof LivingEntity && ((LivingEntity) entity).isDeadOrDying()) return true;
+    public static boolean invalidThread() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return true;
+        return !server.isSameThread();
+    }
 
-        Level level = entity.level();
-        BlockPos entityPos = entity.blockPosition();
-        EntityType<?> entityType = entity.getType();
+    public static boolean isTickable(@NotNull Entity entity, ServerLevel level) {
+        Tickable tickable = (Tickable) entity;
+        Tickable.Level tickableLevel = (Tickable.Level) level;
 
-        if (((Tickable.EntityType)entityType).dpt$alwaysTick()) return true;
+        long chunk = entity.chunkPosition().toLong();
 
-        if (!PotatoConfig.allDimsOptimizable() && !((Tickable.Dim)level).dpt$optimizableDim()) return true;
-
-        if (ClaimManager.isClaimed(level, entityPos)) return true;
-
-        if (level instanceof ServerLevel serverLevel) {
-            if (serverLevel.getForcedChunks().contains(ChunkPos.asLong(entityPos))) return true;
-            if (((IRaids)serverLevel.getRaids()).dpt$hasRaid()) {
-                if (entity instanceof Raider && PotatoConfig.TICKING_RAIDER_ENTITIES_WHEN_RAID.get()) return true;
-                if (((Tickable.EntityType)entityType).dpt$alwaysTickInRaid()) return true;
-            }
+        if (tickable.dpt$alwaysTick()) return true;
+        if (entity instanceof LivingEntity living && ((LivingEntityAccessor)living).dpt$isDead()) return true;
+        if (!tickableLevel.dpt$valid()) return true;
+        if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
+        if (level.getForcedChunks().contains(chunk)) return true;
+        if (tickableLevel.dpt$hasRaids()) {
+            if (ConfigConstants.onlyWhenNoRaids) return true;
+            if (((Tickable.EntityType)entity.getType()).dpt$raidTick()) return true;
+            if (ConfigConstants.ignoreRaidersIfRaiding && entity instanceof Raider) return true;
         }
 
-        if (PotatoConfig.OPTIMIZE_ITEM_MOVEMENT.get() && entity instanceof ItemEntity itemEntity && !PotatoConfig.getItems().contains(itemEntity.getItem().getItem())) return ThreadLocalRandom.current().nextBoolean();
-
-        return PlayerTracker.isEntityNearPlayers(level.dimension().location(), entity.getBlockY(), entity.chunkPosition().toLong());
+        return PlayerTracker.include(level.dimension().location(), entity.getBlockY(), chunk);
     }
 }

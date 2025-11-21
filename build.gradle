@@ -13,10 +13,9 @@ boolean isOld = minecraft_version == "1.16.5"
 boolean useShadow = use_shadow == "true"
 boolean useMixin = use_mixin == "true"
 boolean useMixinExtras = use_mixin_extras == "true"
+boolean useDuplicationLess = use_duplicationless == "true"
 boolean claimIntegration = claim_integration == "true"
 boolean embeddiumIntegration = embeddium_integration == "true"
-boolean useProvider = use_provider == "true"
-boolean useJsonate = use_jsonate == "true"
 
 if (isNeo) useShadow = false
 
@@ -28,7 +27,7 @@ if (useShadow) {
 
     shadowJar {
         configurations = [project.configurations.shadow]
-        relocate "com.llamalad7.mixinextras", "me.kall.doespotatotick.mixinextras"
+        relocate "com.llamalad7.mixinextras", "me.kall.${archives_name}.mixinextras"
         mergeServiceFiles()
         archiveClassifier = "dev-shadow"
     }
@@ -52,7 +51,7 @@ loom {
 
     if (!isNeo && useMixin) {
         forge {
-            mixinConfig 'doespotatotick.mixins.json'
+            mixinConfig "${archives_name}.mixins.json"
         }
     }
 }
@@ -72,11 +71,11 @@ repositories {
 }
 
 def versionMap = [
-    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869", embeddium: "5681725", provider: "6849706", jsonate: "6903435"],
-    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849", embeddium: "5539178", provider: "6851068", jsonate: "6903435"],
-    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845", embeddium: "5322305", provider: "6849704", jsonate: "6903435"],
-    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840", opac: "unfound" , embeddium: "5322311", provider: "6849710", jsonate: "6903435"],
-    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205", embeddium: "6118392", provider: "6849715", jsonate: "6903433"]
+    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869", embeddium: "5681725", duplicationless: "7223614"],
+    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849", embeddium: "5539178", duplicationless: "7223610"],
+    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845", embeddium: "5322305", duplicationless: "7223616"],
+    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840", opac: "unfound" , embeddium: "5322311", duplicationless: "7223618"],
+    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205", embeddium: "6118392", duplicationless: "7223622"]
 ]
 
 LinkedHashMap<String, String> versionInfo = versionMap[minecraft_version]
@@ -88,8 +87,7 @@ String ftbChunks = versionInfo.ftbChunks ?: ""
 String ftbLib = versionInfo.ftbLib ?: ""
 String opac = versionInfo.opac ?: ""
 String embeddium = versionInfo.embeddium ?: ""
-String provider = versionInfo.provider ?: ""
-String jsonate = versionInfo.jsonate ?: ""
+String duplicationLess = versionInfo.duplicationless ?: ""
 
 if (isNeo) useMixinExtras = false
 
@@ -117,8 +115,7 @@ dependencies {
     }
 
     if (embeddiumIntegration) modImplementation("curse.maven:embeddium-908741:${embeddium}")
-    if (useProvider) modImplementation("curse.maven:registrynameprovider-1321150:${provider}")
-    if (useJsonate) modImplementation("curse.maven:jsonate-1325790:${jsonate}")
+    if (useDuplicationLess) modImplementation("curse.maven:duplicationless-1380105:${duplicationLess}")
 }
 
 processResources {
@@ -151,27 +148,27 @@ String currentChangeLog = file("CHANGELOG.md").getText("UTF-8")
 String[] javaVersions = isNeo ? ["Java 21", "Java 22"] : (isOld ? ["Java 8", "Java 17", "Java 21", "Java 22"] : ["Java 17", "Java 21", "Java 22"])
 
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
-    if (cf_project_id == "") throw new UnsupportedOperationException("Didn't define CurseForge project ID")
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-    disableVersionDetection()
-
-    UploadArtifact mainFile = upload(cf_project_id, remapJar)
-    mainFile.displayName = "${archives_name}-${version}"
-    mainFile.releaseType = "release"
-    mainFile.changelog = currentChangeLog
-    mainFile.changelogType = "markdown"
-    mainFile.addModLoader(isNeo ? "NeoForge" : "Forge")
-    mainFile.addJavaVersion(javaVersions)
-    mainFile.addGameVersion(minecraft_version)
-    if (claimIntegration) {
-        mainFile.addOptional("ftb-chunks-forge")
-        if (!isOld) mainFile.addOptional("open-parties-and-claims")
+    if (cf_project_id != "") {
+        apiToken = System.getenv("CURSEFORGE_TOKEN")
+        disableVersionDetection()
+    
+        UploadArtifact mainFile = upload(cf_project_id, remapJar)
+        mainFile.displayName = "${archives_name}-${version}"
+        mainFile.releaseType = "release"
+        mainFile.changelog = currentChangeLog
+        mainFile.changelogType = "markdown"
+        mainFile.addModLoader(isNeo ? "NeoForge" : "Forge")
+        mainFile.addJavaVersion(javaVersions)
+        mainFile.addGameVersion(minecraft_version)
+        if (claimIntegration) {
+            mainFile.addOptional("ftb-chunks-forge")
+            if (!isOld) mainFile.addOptional("open-parties-and-claims")
+        }
+        if (embeddiumIntegration) mainFile.addOptional("embeddium")
+        if (useDuplicationLess) mainFile.addRequirement("duplicationless")
+    
+        UploadArtifact sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+        sourcesFile.changelog = currentChangeLog
+        sourcesFile.changelogType = "markdown"
     }
-    if (embeddiumIntegration) mainFile.addOptional("embeddium")
-    if (useProvider) mainFile.addRequirement("registrynameprovider")
-    if (useJsonate) mainFile.addRequirement("jsonate")
-
-    UploadArtifact sourcesFile = mainFile.withAdditionalFile(sourcesJar)
-    sourcesFile.changelog = currentChangeLog
-    sourcesFile.changelogType = "markdown"
 }
