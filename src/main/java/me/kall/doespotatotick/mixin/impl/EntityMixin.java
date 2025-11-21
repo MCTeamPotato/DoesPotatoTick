@@ -11,6 +11,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -62,6 +63,7 @@ public abstract class EntityMixin implements Tickable {
         if (entity instanceof ItemEntity && ConfigConstants.ignoreItems) return true;
         if (entity instanceof Enemy && ConfigConstants.ignoreEnemies) return true;
         if (entity instanceof Animal && ConfigConstants.ignoreAnimals) return true;
+        if (entity.getType().is(Tags.EntityTypes.BOSSES)) return true;
 
         return ((EntityType)entity.getType()).dpt$alwaysTick();
     }
