@@ -14,7 +14,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,12 +22,6 @@ import java.util.Set;
 public class PlayerTracker {
     public static final Object2ObjectMap<ResourceLocation, Long2ObjectMap<Range>> ACTIVE_CHUNKS = new Object2ObjectOpenHashMap<>();
     public static final Set<ResourceLocation> UPDATE_REQUIRED = new ObjectOpenHashSet<>();
-
-    public static void register(@NotNull IEventBus forgeBus) {
-        forgeBus.addListener(PlayerTracker::login);
-        forgeBus.addListener(PlayerTracker::dimChange);
-        forgeBus.addListener(PlayerTracker::tickLevel);
-    }
 
     public static void login(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {

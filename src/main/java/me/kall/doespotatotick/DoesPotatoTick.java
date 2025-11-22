@@ -44,7 +44,9 @@ public final class DoesPotatoTick {
 
         forgeBus.addListener(ConfigEvents::warn);
         forgeBus.addListener(ConfigEvents::filter);
-        PlayerTracker.register(forgeBus);
+        forgeBus.addListener(PlayerTracker::login);
+        forgeBus.addListener(PlayerTracker::dimChange);
+        forgeBus.addListener(PlayerTracker::tickLevel);
 
         if (FMLLoader.getDist().isClient()) {
             forgeBus.addListener(ClientEvents::bowStart);

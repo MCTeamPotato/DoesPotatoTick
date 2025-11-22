@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ProjectileMixin {
     @Inject(method = "onHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;onHitEntity(Lnet/minecraft/world/phys/EntityHitResult;)V"))
     private void hitEntity(HitResult result, CallbackInfo ci) {
-        if (ConfigConstants.ignoreProjectileTargets) ((Tickable)((EntityHitResult)result).getEntity()).dpt$setAlwaysTick(true);
+        if (ConfigConstants.ignoreProjectileTargets) {
+            ((Tickable)((EntityHitResult)result).getEntity()).dpt$setAlwaysTick(true);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package me.kall.doespotatotick.mixin.impl;
+package me.kall.doespotatotick.mixin.impl.ext;
 
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.ext.Tickable;

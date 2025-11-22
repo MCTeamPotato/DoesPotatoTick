@@ -1,6 +1,7 @@
 package me.kall.doespotatotick.mixin.impl;
 
 import me.kall.doespotatotick.events.PlayerTracker;
+import me.kall.doespotatotick.mixin.impl.ext.EntityMixin;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

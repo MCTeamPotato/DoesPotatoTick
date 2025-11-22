@@ -32,7 +32,7 @@ public class ConfigEvents {
     }
 
     public static void onChunkTick(long chunk, ServerLevel level) {
-        if (ConfigConstants.mobFarmDetection || level.getServer().getTickCount() % 100 != 0) return;
+        if (!ConfigConstants.mobFarmDetection || level.getServer().getTickCount() % 100 != 0) return;
         level.getServer().execute(() -> {
             if (ConfigConstants.detectEnemies) {
                 IntSet enemies = EntityTracker.getEntities(level, chunk, ENEMIES);
