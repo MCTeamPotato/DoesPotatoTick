@@ -24,13 +24,15 @@ public class PlayerTracker {
     public static final Set<ResourceLocation> UPDATE_REQUIRED = new ObjectOpenHashSet<>();
 
     public static void login(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+        if (event.getEntity() instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) event.getEntity();
             player.server.execute(() -> UPDATE_REQUIRED.add(player.level.dimension().location()));
         }
     }
 
     public static void dimChange(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
+        if (event.getEntity() instanceof ServerPlayer) {
+            ServerPlayer player = (ServerPlayer) event.getEntity();
             player.server.execute(() -> UPDATE_REQUIRED.add(event.getTo().location()));
         }
     }
@@ -50,14 +52,15 @@ public class PlayerTracker {
         int height = ConfigConstants.verticalChunks * 16;
 
         for (Player player : level.players()) {
-            ChunkPos center = player.chunkPosition();
-            int y = player.getBlockY();
+            int chunkX = player.blockPosition().getX() >> 4;
+            int chunkZ = player.blockPosition().getZ() >> 4;
+            int y = player.blockPosition().getY();
             int minY = y - height;
             int maxY = y + height;
 
             for (int dx = -horizontal; dx <= horizontal; dx++) {
                 for (int dz = -horizontal; dz <= horizontal; dz++) {
-                    long chunk = ChunkPos.asLong(center.x + dx, center.z + dz);
+                    long chunk = ChunkPos.asLong(chunkX + dx, chunkZ + dz);
 
                     Range yRange = chunkMap.get(chunk);
                     if (yRange == null) {

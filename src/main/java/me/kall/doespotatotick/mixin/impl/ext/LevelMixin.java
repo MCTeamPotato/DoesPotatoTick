@@ -32,7 +32,7 @@ public abstract class LevelMixin implements Tickable.Level {
     @Override
     public boolean dpt$hasRaids() {
         Level level = (Level) (Object) this;
-        return !(level instanceof ServerLevel serverLevel) || !((RaidsAccessor) serverLevel.getRaids()).dpt$getRaids().isEmpty();
+        return !(level instanceof ServerLevel) || !((RaidsAccessor) ((ServerLevel)level).getRaids()).dpt$getRaids().isEmpty();
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

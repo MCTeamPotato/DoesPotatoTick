@@ -6,8 +6,8 @@ import me.kall.duplicationless.util.RegistryEntries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.Map;
 import java.util.Optional;
@@ -52,11 +52,11 @@ public class ConfigConstants {
         validDimensions.clear();
         mobFarmTypes.clear();
 
-        TickConfig.ALWAYS_TICK_ENTITIES.get().stream().map(ResourceLocation::parse).forEach(alwaysTickEntities::add);
+        TickConfig.ALWAYS_TICK_ENTITIES.get().stream().map(ResourceLocation::tryParse).forEach(alwaysTickEntities::add);
         alwaysTickEntitiesModID.addAll(TickConfig.ALWAYS_TICK_ENTITIES_MOD_ID.get());
-        TickConfig.ALWAYS_TICK_RAIDERS.get().stream().map(ResourceLocation::parse).forEach(alwaysTickRaiders::add);
-        TickConfig.VALID_DIMENSIONS.get().stream().map(ResourceLocation::parse).forEach(validDimensions::add);
-        TickConfig.MOB_FARM_TYPES.get().stream().map(ResourceLocation::parse).map(RegistryEntries::entityType).forEach(mobFarmTypes::add);
+        TickConfig.ALWAYS_TICK_RAIDERS.get().stream().map(ResourceLocation::tryParse).forEach(alwaysTickRaiders::add);
+        TickConfig.VALID_DIMENSIONS.get().stream().map(ResourceLocation::tryParse).forEach(validDimensions::add);
+        TickConfig.MOB_FARM_TYPES.get().stream().map(ResourceLocation::tryParse).map(RegistryEntries::entityType).forEach(mobFarmTypes::add);
 
         alwaysTickSetup();
 
@@ -81,6 +81,6 @@ public class ConfigConstants {
             }
         }
 
-        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer()).ifPresent(server -> server.getAllLevels().forEach(level -> level.getEntities().getAll().forEach(entity -> ((Tickable)entity).dpt$setAlwaysTick(((Tickable)entity).dpt$checkAlwaysTick()))));
+        Optional.ofNullable(ServerLifecycleHooks.getCurrentServer()).ifPresent(server -> server.getAllLevels().forEach(level -> level.getAllEntities().forEach(entity -> ((Tickable)entity).dpt$setAlwaysTick(((Tickable)entity).dpt$checkAlwaysTick()))));
     }
 }

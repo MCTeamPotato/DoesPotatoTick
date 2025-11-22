@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -23,8 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 
 @Mod(DoesPotatoTick.MOD_ID)
@@ -68,10 +69,10 @@ public final class DoesPotatoTick {
         Tickable tickable = (Tickable) entity;
         Tickable.Level tickableLevel = (Tickable.Level) level;
 
-        long chunk = entity.chunkPosition().toLong();
+        long chunk = ChunkPos.asLong(entity.blockPosition().getX() >> 4, entity.blockPosition().getZ() >> 4);
 
         if (tickable.dpt$alwaysTick()) return true;
-        if (entity instanceof LivingEntity living && (((LivingEntityAccessor)living).dpt$isDead() || living.isDeadOrDying())) return true;
+        if (entity instanceof LivingEntity && (((LivingEntityAccessor)entity).dpt$isDead() || ((LivingEntity)entity).isDeadOrDying())) return true;
         if (!tickableLevel.dpt$valid()) return true;
         if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
         if (level.getForcedChunks().contains(chunk)) return true;
@@ -81,6 +82,6 @@ public final class DoesPotatoTick {
             if (ConfigConstants.ignoreRaidersIfRaiding && entity instanceof Raider) return true;
         }
 
-        return PlayerTracker.include(level.dimension().location(), entity.getBlockY(), chunk);
+        return PlayerTracker.include(level.dimension().location(), entity.blockPosition().getY(), chunk);
     }
 }

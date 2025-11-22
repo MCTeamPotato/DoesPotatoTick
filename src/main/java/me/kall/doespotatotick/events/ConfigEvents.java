@@ -14,7 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class ConfigEvents {
     private static final Set<UUID> PLAYERS = new HashSet<>();
-    private static final ResourceLocation ENEMIES = ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, "enemies");
+    private static final ResourceLocation ENEMIES = new ResourceLocation(DoesPotatoTick.MOD_ID, "enemies");
 
     public static void filter(EntityTracker.@NotNull EntityFilterRegistryEvent event) {
         if (ConfigConstants.detectEnemies) event.register(ENEMIES, entity -> entity instanceof Enemy);
@@ -78,7 +78,7 @@ public class ConfigEvents {
         return "doespotatotick.warn.notfound";
     }
 
-    public static void reloadConfig(ModConfigEvent.@NotNull Reloading event) {
+    public static void reloadConfig(ModConfig.Reloading event) {
         if (event.getConfig().getModId().equals(DoesPotatoTick.MOD_ID)) {
             ConfigConstants.validate();
         }

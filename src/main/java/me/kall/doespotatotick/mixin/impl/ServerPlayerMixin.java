@@ -24,7 +24,7 @@ public abstract class ServerPlayerMixin extends EntityMixin {
     @Override
     protected void afterPosChange(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        int currentHeight = player.getBlockY();
+        int currentHeight = player.blockPosition().getY();
         MinecraftServer server = player.server;
         if (server == null) return;
         ResourceLocation dim = player.level.dimension().location();

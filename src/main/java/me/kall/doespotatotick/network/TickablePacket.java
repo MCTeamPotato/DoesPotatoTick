@@ -3,7 +3,7 @@ package me.kall.doespotatotick.network;
 import me.kall.doespotatotick.ext.Tickable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
