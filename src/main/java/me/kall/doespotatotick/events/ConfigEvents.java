@@ -40,7 +40,7 @@ public class ConfigEvents {
                     for (int id : enemies) {
                         Entity entity = level.getEntity(id);
                         if (entity == null) continue;
-                        ((Tickable) entity).dpt$setTickable(true);
+                        ((Tickable) entity).dpt$setAlwaysTick(true);
                     }
                 }
             }
@@ -52,7 +52,7 @@ public class ConfigEvents {
                         for (int id : typedEntities) {
                             Entity entity = level.getEntity(id);
                             if (entity == null) continue;
-                            ((Tickable)entity).dpt$setTickable(true);
+                            ((Tickable)entity).dpt$setAlwaysTick(true);
                         }
                     }
                 }

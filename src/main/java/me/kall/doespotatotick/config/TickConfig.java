@@ -41,11 +41,21 @@ public class TickConfig {
         builder.push("DoesPotatoTickConfig");
 
         builder.push("Misc Settings");
-        NOTIFICATION = builder.comment("If enabled, Does Potato Tick will send a client message to notify the login players about their mob farm.").define("Notification", true);
-        MOB_FARM_DETECTION = builder.comment("If enabled, Does Potato Tick will auto-detect the mob farms in your worlds.").define("MobFarmDetection", true);
-        MOB_FARM_THRESHOLD = builder.comment("The least count of entities that enables the current chunk to be detected as a mob farm.").defineInRange("MobFarmEntitiesCountThreshold", 10, 0, Integer.MAX_VALUE);
-        MOB_FARM_TYPES = builder.comment("The type of entities that will be detected.", "Do note that all the enemies are always detected no matter what is defined here if you don't disable the DetectEnemies config option below.").defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), isString);
-        DETECT_ENEMIES = builder.comment("If enabled, Does Potato Tick will keep tracking if your worlds have mob farms of enemies.", "Require game restart to take effect.").define("DetectEnemies", true);
+        NOTIFICATION = builder
+                .comment("If enabled, Does Potato Tick will send a client message to notify the login players about their mob farm.")
+                .define("Notification", true);
+        MOB_FARM_DETECTION = builder
+                .comment("If enabled, Does Potato Tick will auto-detect the mob farms in your worlds.")
+                .define("MobFarmDetection", true);
+        MOB_FARM_THRESHOLD = builder
+                .comment("The least count of entities that enables the current chunk to be detected as a mob farm.")
+                .defineInRange("MobFarmEntitiesCountThreshold", 25, 0, Integer.MAX_VALUE);
+        MOB_FARM_TYPES = builder
+                .comment("The type of entities that will be detected.", "Do note that all the enemies are always detected no matter what is defined here if you don't disable the DetectEnemies config option below.")
+                .defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), isString);
+        DETECT_ENEMIES = builder
+                .comment("If enabled, Does Potato Tick will keep tracking if your worlds have mob farms of enemies.", "Require game restart to take effect.")
+                .define("DetectEnemies", true);
         builder.pop();
 
         builder.push("Entity Ticking Settings");
