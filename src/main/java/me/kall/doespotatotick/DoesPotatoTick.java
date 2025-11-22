@@ -2,16 +2,14 @@ package me.kall.doespotatotick;
 
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.config.TickConfig;
-import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.events.ClientEvents;
 import me.kall.doespotatotick.events.ConfigEvents;
+import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
-import me.kall.doespotatotick.integration.sodium.SodiumIntegration;
 import me.kall.doespotatotick.mixin.access.LivingEntityAccessor;
 import me.kall.doespotatotick.network.TickablePacket;
 import me.kall.duplicationless.network.Networker;
-import me.kall.duplicationless.util.Mods;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -54,8 +52,6 @@ public final class DoesPotatoTick {
             forgeBus.addListener(ClientEvents::bowStart);
             forgeBus.addListener((LivingEntityUseItemEvent.Stop event) -> ClientEvents.bowEnd(event));
             forgeBus.addListener((LivingEntityUseItemEvent.Finish event) -> ClientEvents.bowEnd(event));
-
-            if (Mods.isLoaded("embeddium")) SodiumIntegration.register();
         }
 
         CHANNEL.registerMessage(0, TickablePacket.class, TickablePacket::toBytes, TickablePacket::new, TickablePacket::handle);

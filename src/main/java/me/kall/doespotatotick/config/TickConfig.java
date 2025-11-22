@@ -52,7 +52,7 @@ public class TickConfig {
                 .defineInRange("MobFarmEntitiesCountThreshold", 25, 0, Integer.MAX_VALUE);
         MOB_FARM_TYPES = builder
                 .comment("The type of entities that will be detected.", "Do note that all the enemies are always detected no matter what is defined here if you don't disable the DetectEnemies config option below.")
-                .defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), isString);
+                .defineList("MobFarmTypes", Lists.newArrayList(), isString);
         DETECT_ENEMIES = builder
                 .comment("If enabled, Does Potato Tick will keep tracking if your worlds have mob farms of enemies.", "Require game restart to take effect.")
                 .define("DetectEnemies", true);
@@ -124,7 +124,7 @@ public class TickConfig {
                 .defineList("EntitiesOfTheModsThatWillAlwaysTick", entityModIDList, isString);
         ALWAYS_TICK_RAIDERS = builder
                 .comment("A list of raider entities that will always tick.")
-                .defineListAllowEmpty("RaidersThatWillAlwaysTick", Lists.newArrayList(), isString);
+                .defineList("RaidersThatWillAlwaysTick", Lists.newArrayList(), isString);
         builder.pop();
 
         builder.pop();
@@ -132,7 +132,7 @@ public class TickConfig {
         builder.push("Dimensions");
         VALID_DIMENSIONS = builder
                 .comment("A whitelist of dimensions where entity optimization is enabled. Leave empty to allow all.")
-                .defineListAllowEmpty("OptimizableDimensions", Lists.newArrayList(), isString);
+                .defineList("OptimizableDimensions", Lists.newArrayList(), isString);
         builder.pop();
         builder.pop();
         builder.pop();

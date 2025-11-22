@@ -27,7 +27,7 @@ public abstract class ServerPlayerMixin extends EntityMixin {
         int currentHeight = player.getBlockY();
         MinecraftServer server = player.server;
         if (server == null) return;
-        ResourceLocation dim = player.level().dimension().location();
+        ResourceLocation dim = player.level.dimension().location();
         if (Math.abs(currentHeight - this.dpt$lastHeight) >= 4) {
             server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
             this.dpt$lastHeight = currentHeight;

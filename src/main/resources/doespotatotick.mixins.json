@@ -20,6 +20,7 @@
     "impl.ext.LevelMixin"
   ],
   "client": [
-    "client.EntityRenderDispatcherMixin"
+    "client.EntityRenderDispatcherMixin",
+    "client.sodium.SodiumOptionsGUIMixin"
   ]
 }

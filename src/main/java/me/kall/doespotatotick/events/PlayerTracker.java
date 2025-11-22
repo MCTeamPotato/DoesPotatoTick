@@ -25,7 +25,7 @@ public class PlayerTracker {
 
     public static void login(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.server.execute(() -> UPDATE_REQUIRED.add(player.level().dimension().location()));
+            player.server.execute(() -> UPDATE_REQUIRED.add(player.level.dimension().location()));
         }
     }
 
