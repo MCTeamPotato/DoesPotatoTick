@@ -2,14 +2,14 @@ package me.kall.doespotatotick;
 
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.config.TickConfig;
-import me.kall.doespotatotick.data.PlayerTracker;
+import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.events.ClientEvents;
 import me.kall.doespotatotick.events.ConfigEvents;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
 import me.kall.doespotatotick.mixin.access.LivingEntityAccessor;
 import me.kall.doespotatotick.network.TickablePacket;
-import net.minecraft.resources.ResourceLocation;
+import me.kall.duplicationless.network.Networker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public final class DoesPotatoTick {
     public static final String MOD_ID = "doespotatotick";
 
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(MOD_ID, "main"), () -> "1", ver -> ver.equals("1"), ver -> ver.equals("1"));
+    public static final SimpleChannel CHANNEL = Networker.create(MOD_ID, "1");
 
     public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
         context.registerConfig(ModConfig.Type.COMMON, TickConfig.CONFIG);
@@ -42,7 +41,9 @@ public final class DoesPotatoTick {
 
         modBus.addListener(ConfigEvents::reloadConfig);
         modBus.addListener(ConfigEvents::loadConfig);
+
         forgeBus.addListener(ConfigEvents::warn);
+        forgeBus.addListener(ConfigEvents::filter);
         PlayerTracker.register(forgeBus);
 
         if (FMLLoader.getDist().isClient()) {

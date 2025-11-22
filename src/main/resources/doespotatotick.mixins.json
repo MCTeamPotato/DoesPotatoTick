@@ -16,6 +16,7 @@
     "impl.EntityTypeMixin",
     "impl.LevelMixin",
     "impl.ProjectileMixin",
+    "impl.ServerLevelMixin",
     "impl.ServerPlayerMixin",
     "impl.core.ServerLevelMixin"
   ],

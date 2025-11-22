@@ -71,11 +71,11 @@ repositories {
 }
 
 def versionMap = [
-    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869", embeddium: "5681725", duplicationless: "7223614"],
-    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849", embeddium: "5539178", duplicationless: "7223610"],
-    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845", embeddium: "5322305", duplicationless: "7223616"],
-    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840", opac: "unfound" , embeddium: "5322311", duplicationless: "7223618"],
-    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205", embeddium: "6118392", duplicationless: "7223622"]
+    "1.20.1": [forge: "47.4.2", parchment: "2023.09.03", ftbChunks: "6431735", ftbLib: "6164053", opac: "6242869", embeddium: "5681725", duplicationless: "7248332"],
+    "1.19.2": [forge: "43.5.0", parchment: "2022.11.27", ftbChunks: "5710631", ftbLib: "4661834", opac: "6242849", embeddium: "5539178", duplicationless: "7248340"],
+    "1.18.2": [forge: "40.3.10", parchment: "2022.11.06", ftbChunks: "5423717", ftbLib: "4396792", opac: "6242845", embeddium: "5322305", duplicationless: "7248330"],
+    "1.16.5": [forge: "36.2.42", parchment: "2022.03.06", ftbChunks: "4297564", ftbLib: "3553840", opac: "unfound" , embeddium: "5322311", duplicationless: "7248334"],
+    "1.21.1": [neo  : "21.1.192", parchment: "2024.11.17", ftbChunks: "6504893", ftbLib: "6711324", opac: "6476205", embeddium: "6118392", duplicationless: "7248327"]
 ]
 
 LinkedHashMap<String, String> versionInfo = versionMap[minecraft_version]

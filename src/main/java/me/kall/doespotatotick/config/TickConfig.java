@@ -14,6 +14,9 @@ public class TickConfig {
     static final ForgeConfigSpec.BooleanValue ONLY_LIVING, ONLY_ENEMIES, ONLY_ANIMALS, ONLY_WHEN_NO_RAIDS;
     static final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_TICK_ENTITIES, ALWAYS_TICK_ENTITIES_MOD_ID, ALWAYS_TICK_RAIDERS, VALID_DIMENSIONS;
     static final ForgeConfigSpec.BooleanValue NOTIFICATION;
+    static final ForgeConfigSpec.BooleanValue MOB_FARM_DETECTION, DETECT_ENEMIES;
+    static final ForgeConfigSpec.IntValue MOB_FARM_THRESHOLD;
+    static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_FARM_TYPES;
 
     static {
         List<? extends String> entityModIDList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks" , "valkyrienskies", "vs_eureka");
@@ -39,6 +42,10 @@ public class TickConfig {
 
         builder.push("Misc Settings");
         NOTIFICATION = builder.comment("If enabled, Does Potato Tick will send a client message to notify the login players about their mob farm.").define("Notification", true);
+        MOB_FARM_DETECTION = builder.comment("If enabled, Does Potato Tick will auto-detect the mob farms in your worlds.").define("MobFarmDetection", true);
+        MOB_FARM_THRESHOLD = builder.comment("The least count of entities that enables the current chunk to be detected as a mob farm.").defineInRange("MobFarmEntitiesCountThreshold", 10, 0, Integer.MAX_VALUE);
+        MOB_FARM_TYPES = builder.comment("The type of entities that will be detected.", "Do note that all the enemies are always detected no matter what is defined here if you don't disable the DetectEnemies config option below.").defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), isString);
+        DETECT_ENEMIES = builder.comment("If enabled, Does Potato Tick will keep tracking if your worlds have mob farms of enemies.", "Require game restart to take effect.").define("DetectEnemies", true);
         builder.pop();
 
         builder.push("Entity Ticking Settings");
@@ -125,7 +132,7 @@ public class TickConfig {
 
     public static final class Client {
         public static final ForgeConfigSpec CONFIG;
-        static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, BOW_SKIP;
+        static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, PROJECTILE_WEAPON_SKIP;
 
         static {
             ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -133,9 +140,9 @@ public class TickConfig {
             SKIP_RENDERING_UNTICKABLE = builder
                     .comment("If true, entities that are not ticking will not be rendered on the client. Improves FPS.", "You can also configure whether this option is invalidated when you are using bow/crossbow items.")
                     .define("StopRenderingUntickableEntities", true);
-            BOW_SKIP = builder
-                    .comment("If true, entities will always be rendered even though they're not tickable when client players are charging bows/crossbows.")
-                    .define("RenderAllEntitiesWhenChargingBows", true);
+            PROJECTILE_WEAPON_SKIP = builder
+                    .comment("If true, entities will always be rendered even though they're not tickable when client players are charging projectile weapons.")
+                    .define("RenderAllEntitiesWhenChargingProjectileWeapons", true);
             builder.pop();
             CONFIG = builder.build();
         }

@@ -2,6 +2,7 @@ package me.kall.doespotatotick.config;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.doespotatotick.ext.Tickable;
+import me.kall.duplicationless.util.RegistryEntries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -15,14 +16,16 @@ import java.util.Set;
 public class ConfigConstants {
     public static boolean entityOptimizable;
     public static int verticalChunks, horizontalChunks;
+    public static int mobFarmThreshold;
     public static boolean ignoreEnemies, ignoreProjectiles, ignoreProjectileTargets, ignoreItems, ignoreRaidersIfRaiding, ignoreAnimals;
     public static boolean onlyLiving, onlyEnemies, onlyAnimals, onlyWhenNoRaids;
-    public static boolean notification;
+    public static boolean notification, mobFarmDetection, detectEnemies;
     public static final Set<ResourceLocation> alwaysTickEntities = new ObjectOpenHashSet<>(), alwaysTickRaiders = new ObjectOpenHashSet<>(), validDimensions = new ObjectOpenHashSet<>();
+    public static final Set<EntityType<?>> mobFarmTypes = new ObjectOpenHashSet<>();
     public static final Set<String> alwaysTickEntitiesModID = new ObjectOpenHashSet<>();
 
     public static volatile boolean skipRenderingUntickable;
-    public static boolean bowSkip;
+    public static boolean projectileWeaponSkip;
 
     public static void validate() {
         entityOptimizable = TickConfig.ENTITY_OPTIMIZATION.get();
@@ -39,16 +42,21 @@ public class ConfigConstants {
         onlyAnimals = TickConfig.ONLY_ANIMALS.get();
         onlyWhenNoRaids = TickConfig.ONLY_WHEN_NO_RAIDS.get();
         notification = TickConfig.NOTIFICATION.get();
+        mobFarmDetection = TickConfig.MOB_FARM_DETECTION.get();
+        mobFarmThreshold = TickConfig.MOB_FARM_THRESHOLD.get();
+        detectEnemies = TickConfig.DETECT_ENEMIES.get();
 
         alwaysTickEntities.clear();
         alwaysTickEntitiesModID.clear();
         alwaysTickRaiders.clear();
         validDimensions.clear();
+        mobFarmTypes.clear();
 
         TickConfig.ALWAYS_TICK_ENTITIES.get().stream().map(ResourceLocation::parse).forEach(alwaysTickEntities::add);
         alwaysTickEntitiesModID.addAll(TickConfig.ALWAYS_TICK_ENTITIES_MOD_ID.get());
         TickConfig.ALWAYS_TICK_RAIDERS.get().stream().map(ResourceLocation::parse).forEach(alwaysTickRaiders::add);
         TickConfig.VALID_DIMENSIONS.get().stream().map(ResourceLocation::parse).forEach(validDimensions::add);
+        TickConfig.MOB_FARM_TYPES.get().stream().map(ResourceLocation::parse).map(RegistryEntries::entityType).forEach(mobFarmTypes::add);
 
         alwaysTickSetup();
 
@@ -57,7 +65,7 @@ public class ConfigConstants {
 
     public static void validateClient() {
         skipRenderingUntickable = TickConfig.Client.SKIP_RENDERING_UNTICKABLE.get();
-        bowSkip = TickConfig.Client.BOW_SKIP.get();
+        projectileWeaponSkip = TickConfig.Client.PROJECTILE_WEAPON_SKIP.get();
     }
 
     public static void alwaysTickSetup() {
