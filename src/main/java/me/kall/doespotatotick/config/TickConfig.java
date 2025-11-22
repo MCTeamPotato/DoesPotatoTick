@@ -1,22 +1,23 @@
 package me.kall.doespotatotick.config;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class TickConfig {
-    public static final ForgeConfigSpec CONFIG;
-    static final ForgeConfigSpec.IntValue TICKABLE_VERTICAL_CHUNKS, TICKABLE_HORIZONTAL_CHUNKS;
-    static final ForgeConfigSpec.BooleanValue IGNORE_ENEMIES, IGNORE_PROJECTILES, IGNORE_PROJECTILES_TARGETS, IGNORE_ITEMS, IGNORE_RAIDERS_IF_RAIDING, IGNORE_ANIMALS;
-    static final ForgeConfigSpec.BooleanValue ENTITY_OPTIMIZATION;
-    static final ForgeConfigSpec.BooleanValue ONLY_LIVING, ONLY_ENEMIES, ONLY_ANIMALS, ONLY_WHEN_NO_RAIDS;
-    static final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_TICK_ENTITIES, ALWAYS_TICK_ENTITIES_MOD_ID, ALWAYS_TICK_RAIDERS, VALID_DIMENSIONS;
-    static final ForgeConfigSpec.BooleanValue NOTIFICATION;
-    static final ForgeConfigSpec.BooleanValue MOB_FARM_DETECTION, DETECT_ENEMIES;
-    static final ForgeConfigSpec.IntValue MOB_FARM_THRESHOLD;
-    static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_FARM_TYPES;
+    public static final ModConfigSpec CONFIG;
+    static final ModConfigSpec.IntValue TICKABLE_VERTICAL_CHUNKS, TICKABLE_HORIZONTAL_CHUNKS;
+    static final ModConfigSpec.BooleanValue IGNORE_ENEMIES, IGNORE_PROJECTILES, IGNORE_PROJECTILES_TARGETS, IGNORE_ITEMS, IGNORE_RAIDERS_IF_RAIDING, IGNORE_ANIMALS;
+    static final ModConfigSpec.BooleanValue ENTITY_OPTIMIZATION;
+    static final ModConfigSpec.BooleanValue ONLY_LIVING, ONLY_ENEMIES, ONLY_ANIMALS, ONLY_WHEN_NO_RAIDS;
+    static final ModConfigSpec.ConfigValue<List<? extends String>> ALWAYS_TICK_ENTITIES, ALWAYS_TICK_ENTITIES_MOD_ID, ALWAYS_TICK_RAIDERS, VALID_DIMENSIONS;
+    static final ModConfigSpec.BooleanValue NOTIFICATION;
+    static final ModConfigSpec.BooleanValue MOB_FARM_DETECTION, DETECT_ENEMIES;
+    static final ModConfigSpec.IntValue MOB_FARM_THRESHOLD;
+    static final ModConfigSpec.ConfigValue<List<? extends String>> MOB_FARM_TYPES;
 
     static {
         List<? extends String> entityModIDList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks" , "valkyrienskies", "vs_eureka");
@@ -36,8 +37,9 @@ public class TickConfig {
         );
 
         Predicate<Object> isString = object -> object instanceof String;
+        Supplier<String> location = () -> "namespace:path";
 
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         builder.push("DoesPotatoTickConfig");
 
         builder.push("Misc Settings");
@@ -52,7 +54,7 @@ public class TickConfig {
                 .defineInRange("MobFarmEntitiesCountThreshold", 25, 0, Integer.MAX_VALUE);
         MOB_FARM_TYPES = builder
                 .comment("The type of entities that will be detected.", "Do note that all the enemies are always detected no matter what is defined here if you don't disable the DetectEnemies config option below.")
-                .defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), isString);
+                .defineListAllowEmpty("MobFarmTypes", Lists.newArrayList(), location, isString);
         DETECT_ENEMIES = builder
                 .comment("If enabled, Does Potato Tick will keep tracking if your worlds have mob farms of enemies.", "Require game restart to take effect.")
                 .define("DetectEnemies", true);
@@ -118,13 +120,13 @@ public class TickConfig {
         builder.push("Blacklist");
         ALWAYS_TICK_ENTITIES = builder
                 .comment("A list of specific entities that will always tick no matter what.")
-                .defineList("EntitiesThatWillAlwaysTick", entityList, isString);
+                .defineList("EntitiesThatWillAlwaysTick", entityList, location, isString);
         ALWAYS_TICK_ENTITIES_MOD_ID = builder
                 .comment("All entities from these mod IDs will always tick.")
-                .defineList("EntitiesOfTheModsThatWillAlwaysTick", entityModIDList, isString);
+                .defineList("EntitiesOfTheModsThatWillAlwaysTick", entityModIDList, () -> "modID", isString);
         ALWAYS_TICK_RAIDERS = builder
                 .comment("A list of raider entities that will always tick.")
-                .defineListAllowEmpty("RaidersThatWillAlwaysTick", Lists.newArrayList(), isString);
+                .defineListAllowEmpty("RaidersThatWillAlwaysTick", Lists.newArrayList(), location, isString);
         builder.pop();
 
         builder.pop();
@@ -132,7 +134,7 @@ public class TickConfig {
         builder.push("Dimensions");
         VALID_DIMENSIONS = builder
                 .comment("A whitelist of dimensions where entity optimization is enabled. Leave empty to allow all.")
-                .defineListAllowEmpty("OptimizableDimensions", Lists.newArrayList(), isString);
+                .defineListAllowEmpty("OptimizableDimensions", Lists.newArrayList(), location, isString);
         builder.pop();
         builder.pop();
         builder.pop();
@@ -141,11 +143,11 @@ public class TickConfig {
     }
 
     public static final class Client {
-        public static final ForgeConfigSpec CONFIG;
-        public static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, PROJECTILE_WEAPON_SKIP;
+        public static final ModConfigSpec CONFIG;
+        public static final ModConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, PROJECTILE_WEAPON_SKIP;
 
         static {
-            ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+            ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
             builder.push("DoesPotatoTickClientConfig");
             SKIP_RENDERING_UNTICKABLE = builder
                     .comment("If true, entities that are not ticking will not be rendered on the client. Improves FPS.", "You can also configure whether this option is invalidated when you are using bow/crossbow items.")

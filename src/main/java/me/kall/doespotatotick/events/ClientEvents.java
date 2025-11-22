@@ -3,7 +3,7 @@ package me.kall.doespotatotick.events;
 import me.kall.doespotatotick.config.ConfigConstants;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class ClientEvents {

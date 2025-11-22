@@ -1,6 +1,5 @@
 package me.kall.doespotatotick.mixin.impl.ext;
 
-import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.network.TickablePacket;
@@ -11,8 +10,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.common.Tags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +33,7 @@ public abstract class EntityMixin implements Tickable {
 
         this.dpt$tickable = tickable;
         Entity entity = (Entity) (Object) this;
-        DoesPotatoTick.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new TickablePacket(tickable, entity.getId()));
+        TickablePacket.send(entity, tickable);
     }
 
     @Override

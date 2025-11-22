@@ -8,13 +8,13 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.config.ConfigConstants;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -35,10 +35,10 @@ public class PlayerTracker {
         }
     }
 
-    public static void tickLevel(TickEvent.@NotNull LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.START || event.side != LogicalSide.SERVER) return;
+    public static void tickLevel(LevelTickEvent.Pre event) {
         if (DoesPotatoTick.invalidThread()) return;
-        Level level = event.level;
+        Level level = event.getLevel();
+        if (!(level instanceof ServerLevel)) return;
         ResourceLocation dimID = level.dimension().location();
 
         if (!UPDATE_REQUIRED.remove(dimID)) return;
