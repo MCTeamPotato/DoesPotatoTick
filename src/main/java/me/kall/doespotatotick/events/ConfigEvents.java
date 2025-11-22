@@ -6,7 +6,7 @@ import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
 import me.kall.duplicationless.data.EntityTracker;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -62,9 +62,9 @@ public class ConfigEvents {
 
     public static void warn(PlayerEvent.PlayerLoggedInEvent event) {
         if (ConfigConstants.notification) {
-            Player player = event.getEntity();
+            Player player = event.getPlayer();
             if (!PLAYERS.contains(player.getUUID())) {
-                player.displayClientMessage(Component.translatable(warnKey()), false);
+                player.displayClientMessage(new TranslatableComponent(warnKey()), false);
                 PLAYERS.add(player.getUUID());
             }
         }

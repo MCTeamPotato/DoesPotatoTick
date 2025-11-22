@@ -69,7 +69,7 @@ public class ConfigConstants {
     }
 
     public static void alwaysTickSetup() {
-        for (Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>> entry : ForgeRegistries.ENTITY_TYPES.getEntries()) {
+        for (Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>> entry : ForgeRegistries.ENTITIES.getEntries()) {
             ResourceLocation id = entry.getKey().location();
             Tickable.EntityType entityType = (Tickable.EntityType) entry.getValue();
             if (alwaysTickEntities.contains(id) || alwaysTickEntitiesModID.contains(id.getNamespace())) {

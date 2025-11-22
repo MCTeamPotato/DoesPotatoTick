@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI;
 import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.kall.doespotatotick.integration.sodium.SodiumIntegration;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,6 +20,6 @@ public abstract class SodiumOptionsGUIMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        this.pages.add(new OptionPage(Component.translatable("doespotatotick.page"), ImmutableList.copyOf(SodiumIntegration.groups())));
+        this.pages.add(new OptionPage(new TranslatableComponent("doespotatotick.page"), ImmutableList.copyOf(SodiumIntegration.groups())));
     }
 }

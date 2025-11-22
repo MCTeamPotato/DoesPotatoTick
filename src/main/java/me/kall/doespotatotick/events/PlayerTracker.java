@@ -35,10 +35,10 @@ public class PlayerTracker {
         }
     }
 
-    public static void tickLevel(TickEvent.@NotNull LevelTickEvent event) {
+    public static void tickLevel(TickEvent.WorldTickEvent event) {
         if (event.phase != TickEvent.Phase.START || event.side != LogicalSide.SERVER) return;
         if (DoesPotatoTick.invalidThread()) return;
-        Level level = event.level;
+        Level level = event.world;
         ResourceLocation dimID = level.dimension().location();
 
         if (!UPDATE_REQUIRED.remove(dimID)) return;

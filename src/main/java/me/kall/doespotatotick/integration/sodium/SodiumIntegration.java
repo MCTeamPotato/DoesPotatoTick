@@ -7,7 +7,7 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionImpl;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 import me.jellysquid.mods.sodium.client.gui.options.storage.SodiumOptionsStorage;
 import me.kall.doespotatotick.config.TickConfig;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +27,8 @@ public class SodiumIntegration {
 
     private static OptionImpl<SodiumGameOptions, Boolean> booleanOptionFor(String name, String tooltip, ForgeConfigSpec.BooleanValue config, OptionImpact impact) {
         return OptionImpl.createBuilder(Boolean.class, storage)
-                .setName(Component.translatable(name))
-                .setTooltip(Component.translatable(tooltip))
+                .setName(new TranslatableComponent(name))
+                .setTooltip(new TranslatableComponent(tooltip))
                 .setControl(TickBoxControl::new)
                 .setBinding((sodiumGameOptions, value) -> config.set(value), sodiumGameOptions -> config.get())
                 .setImpact(impact)

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -32,12 +33,12 @@ public final class DoesPotatoTick {
 
     public static final SimpleChannel CHANNEL = Networker.create(MOD_ID, "1");
 
-    public DoesPotatoTick(@NotNull FMLJavaModLoadingContext context) {
-        context.registerConfig(ModConfig.Type.COMMON, TickConfig.CONFIG);
-        context.registerConfig(ModConfig.Type.CLIENT, TickConfig.Client.CONFIG);
+    public DoesPotatoTick() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TickConfig.CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, TickConfig.Client.CONFIG);
 
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-        IEventBus modBus = context.getModEventBus();
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         modBus.addListener(ConfigEvents::reloadConfig);
         modBus.addListener(ConfigEvents::loadConfig);
