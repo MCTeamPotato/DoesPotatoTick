@@ -13,5 +13,12 @@ A Minecraft mod
 '''
 #logoFile = ""
 
+[[dependencies.doespotatotick]]
+modId="duplicationless"
+mandatory=true
+versionRange="[1.0.0,)"
+ordering="NONE"
+side="BOTH"
+
 [[mixins]]
 config = "doespotatotick.mixins.json"
