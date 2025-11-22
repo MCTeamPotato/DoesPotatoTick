@@ -12,12 +12,12 @@
   "mixins": [
     "access.LivingEntityAccessor",
     "access.RaidsAccessor",
+    "impl.ProjectileMixin",
+    "impl.ServerLevelMixin",
+    "impl.ServerPlayerMixin",
     "impl.ext.EntityMixin",
     "impl.ext.EntityTypeMixin",
-    "impl.ext.LevelMixin",
-    "impl.ProjectileMixin",
-    "impl.ServerPlayerMixin",
-    "impl.ServerLevelMixin"
+    "impl.ext.LevelMixin"
   ],
   "client": [
     "client.EntityRenderDispatcherMixin"

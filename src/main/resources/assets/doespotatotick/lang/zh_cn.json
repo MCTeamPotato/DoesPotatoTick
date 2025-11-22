@@ -2,5 +2,12 @@
   "doespotatotick.warn.ftbchunks.present": "Does Potato Tick 已被此服务器安装。如果你发现你的怪物农场在玩家远离其时无法正常工作，请尝试使用FTB Chunks声明其所在区块。你可以在Does Potato Tick的配置文件中关闭此消息。",
   "doespotatotick.warn.openpartiesandclaims.present": "Does Potato Tick 已被此服务器安装。如果你发现你的怪物农场在玩家远离其时无法正常工作，请尝试使用Open Parties And Claims声明其所在区块。你可以在Does Potato Tick的配置文件中关闭此消息。",
   "doespotatotick.warn.both.present": "Does Potato Tick 已被此服务器安装。如果你发现你的怪物农场在玩家远离其时无法正常工作，请尝试使用Open Parties And Claims 或 FTB Chunks 声明其所在区块。你可以在Does Potato Tick的配置文件中关闭此消息。",
-  "doespotatotick.warn.notfound": "Does Potato Tick 已被此服务器安装，但 FTB Chunks 或 Open Parties And Claims 没有。如果你发现你的怪物农场在玩家远离其时无法正常工作，请尝试安装两者之一并声明其所在的区块。你可以在Does Potato Tick的配置文件中关闭此消息。"
+  "doespotatotick.warn.notfound": "Does Potato Tick 已被此服务器安装，但 FTB Chunks 或 Open Parties And Claims 没有。如果你发现你的怪物农场在玩家远离其时无法正常工作，请尝试安装两者之一并声明其所在的区块。你可以在Does Potato Tick的配置文件中关闭此消息。",
+
+  "doespotatotick.skip.untickable": "不再渲染停止tick的实体",
+  "doespotatotick.skip.untickable.tooltip": "若启用，被Does Potato Tick停止tick的实体将不再在客户端上渲染。",
+  "doespotatotick.skip.shoot": "使用远程武器时始终渲染实体",
+  "doespotatotick.skip.shoot.tooltip": "若启用，当你使用弓/弩/三叉戟或任何其他模组定义的远程武器时，实体的渲染将不再被“不再渲染停止tick的实体”这个选项影响。",
+
+  "doespotatotick.page": "DPT"
 }

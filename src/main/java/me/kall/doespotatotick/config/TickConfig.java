@@ -142,7 +142,7 @@ public class TickConfig {
 
     public static final class Client {
         public static final ForgeConfigSpec CONFIG;
-        static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, PROJECTILE_WEAPON_SKIP;
+        public static final ForgeConfigSpec.BooleanValue SKIP_RENDERING_UNTICKABLE, PROJECTILE_WEAPON_SKIP;
 
         static {
             ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
