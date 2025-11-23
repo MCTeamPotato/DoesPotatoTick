@@ -33,6 +33,7 @@ public abstract class EntityMixin implements Tickable {
 
         this.dpt$tickable = tickable;
         Entity entity = (Entity) (Object) this;
+        if (entity.level().isClientSide()) return;
         TickablePacket.send(entity, tickable);
     }
 
