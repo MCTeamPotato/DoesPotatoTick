@@ -34,6 +34,7 @@ public abstract class EntityMixin implements Tickable {
 
         this.dpt$tickable = tickable;
         Entity entity = (Entity) (Object) this;
+        if (entity.level.isClientSide()) return;
         DoesPotatoTick.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new TickablePacket(tickable, entity.getId()));
     }
 
