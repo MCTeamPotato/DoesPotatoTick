@@ -81,7 +81,17 @@ A lightweight packet informs the client which entities should be displayed.
 
 ---
 
-## **5. Design Considerations**
+## **5. Make DPT Better**
+When you:
+* Feel that an specific entity type should never stop ticking
+* Have a config option request
+* Encounter unexpected situation because of entities' ticking freezing
+
+Don't hesitate to contact me by [GitHub Issues](https://github.com/MCTeamPotato/DoesPotatoTick/issues) or email `670067575@qq.com`
+
+---
+
+## **6. Design Considerations**
 
 The mod aims to:
 
@@ -91,7 +101,9 @@ The mod aims to:
 
 Its behavior resembles a controlled, context-aware scheduling system rather than a simple “disable distant entities” toggle.
 
-## **6. A Bit of History & Evolution**
+---
+
+## **7. A Bit of History & Evolution**
 
 DoesPotatoTick didn’t start as the polished mod you see today.
 
@@ -103,13 +115,15 @@ No client-side rendering fixes either — frozen entities would just stutter and
 
 Everything changed when we updated the mod:
 
-- Replaced the naïve player loop with the current **PlayerTracker**: a dimension → chunk → Y-range spatial map, updated lazily only on movement. Complexity dropped from O(n×m) to essentially O(players) per update (and we don't update it every tick either).
+- Replaced the naïve player loop with the current **PlayerTracker**: a dimension → chunk → Y-range spatial map, updated lazily only on movement. Complexity dropped from O(n×m) to essentially O(players) per update.
 - `alwaysTick` flags are now computed once at entity-type registration and cached forever.
 - Added proper network packets and client-side culling (plus the bow-drawing safety valve) so frozen entities simply vanish cleanly instead of glitching.
 - Mob-farm detection, raid awareness, claim-mod integration, Embeddium GUI… none of these existed back then.
 
 Today’s DoesPotatoTick is no longer “just another entity culling mod.” It’s the result of multiple full refactors and an obsession with doing it right — without ever breaking your bosses, farms, or Create contraptions.
 
-Thanks to Txni for the original spark, and to every tester and contributor.
+Thanks to Txni for the original spark, and to every tester and contributor, as well as Grok and ChatGPT for helping me design, write and polish this description (I'm just feeling dead when writing readme by myself lol).
+
+---
 
 Enjoy the buttery-smooth ticks (or lack thereof)!
