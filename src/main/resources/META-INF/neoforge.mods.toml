@@ -9,7 +9,15 @@ version = "${version}"
 displayName = "DoesPotatoTick"
 authors = "Kall"
 description = '''
-A Minecraft mod
+Smart entity freezing mod that dramatically reduces server CPU load
+by suspending distant and unimportant entities—while keeping farms,
+bosses, raids, Create contraptions, and claimed chunks fully functional.
+
+Only ticks what matters. Butter-smooth performance without breaking your world.
+Now with mob farm detection, claim mod support, raid awareness,
+and clean client-side rendering (Embeddium menu included).
+
+Potatoes don't need to tick when nobody's watching. 🥔✨
 '''
 #logoFile = ""
 
