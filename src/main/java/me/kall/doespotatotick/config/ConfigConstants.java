@@ -6,6 +6,7 @@ import me.kall.duplicationless.util.RegistryEntries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -60,7 +61,7 @@ public class ConfigConstants {
 
         alwaysTickSetup();
 
-        validateClient();
+        if (FMLLoader.getDist().isClient()) validateClient();
     }
 
     public static void validateClient() {
