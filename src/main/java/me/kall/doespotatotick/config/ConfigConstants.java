@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.Map;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class ConfigConstants {
 
         alwaysTickSetup();
 
-        validateClient();
+        if (FMLLoader.getDist().isClient()) validateClient();
     }
 
     public static void validateClient() {
