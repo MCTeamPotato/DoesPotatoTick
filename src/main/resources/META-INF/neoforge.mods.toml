@@ -24,7 +24,7 @@ Potatoes don't need to tick when nobody's watching. 🥔✨
 [[dependencies.doespotatotick]]
 modId="duplicationless"
 mandatory=true
-versionRange="[1.0.0,)"
+versionRange="[1.1.2,)"
 ordering="NONE"
 side="BOTH"
 

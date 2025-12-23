@@ -18,25 +18,29 @@ public abstract class ServerPlayerMixin extends EntityMixin {
     @Override
     protected void beforePosChange(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        this.dpt$lastChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
+        try {
+            this.dpt$lastChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
+        } catch (Throwable ignored) {}
     }
 
     @Override
     protected void afterPosChange(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        int currentHeight = player.getBlockY();
-        MinecraftServer server = player.server;
-        if (server == null) return;
-        ResourceLocation dim = player.level().dimension().location();
-        if (Math.abs(currentHeight - this.dpt$lastHeight) >= 4) {
-            server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
-            this.dpt$lastHeight = currentHeight;
-            return;
-        }
+        try {
+            int currentHeight = player.getBlockY();
+            MinecraftServer server = player.server;
+            if (server == null) return;
+            ResourceLocation dim = player.level().dimension().location();
+            if (Math.abs(currentHeight - this.dpt$lastHeight) >= 4) {
+                server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
+                this.dpt$lastHeight = currentHeight;
+                return;
+            }
 
-        long currentChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
-        if (this.dpt$lastChunk != currentChunk) {
-            server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
-        }
+            long currentChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
+            if (this.dpt$lastChunk != currentChunk) {
+                server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
+            }
+        } catch (Throwable ignored) {}
     }
 }
