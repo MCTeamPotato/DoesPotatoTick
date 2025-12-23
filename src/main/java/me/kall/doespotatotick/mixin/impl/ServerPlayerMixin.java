@@ -2,6 +2,7 @@ package me.kall.doespotatotick.mixin.impl;
 
 import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.mixin.impl.ext.EntityMixin;
+import me.kall.duplicationless.util.Positions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +20,7 @@ public abstract class ServerPlayerMixin extends EntityMixin {
     protected void beforePosChange(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         try {
-            this.dpt$lastChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
+            this.dpt$lastChunk = Positions.toChunk(player.blockPosition()));
         } catch (Throwable ignored) {}
     }
 
@@ -37,7 +38,7 @@ public abstract class ServerPlayerMixin extends EntityMixin {
                 return;
             }
 
-            long currentChunk = ChunkPos.asLong(player.blockPosition().getX() >> 4, player.blockPosition().getZ() >> 4);
+            long currentChunk = Positions.toChunk(player.blockPosition());
             if (this.dpt$lastChunk != currentChunk) {
                 server.execute(() -> PlayerTracker.UPDATE_REQUIRED.add(dim));
             }
