@@ -6,7 +6,6 @@ import me.kall.duplicationless.util.Positions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ChunkPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,7 +19,7 @@ public abstract class ServerPlayerMixin extends EntityMixin {
     protected void beforePosChange(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer) (Object) this;
         try {
-            this.dpt$lastChunk = Positions.toChunk(player.blockPosition()));
+            this.dpt$lastChunk = Positions.toChunk(player.blockPosition());
         } catch (Throwable ignored) {}
     }
 
