@@ -1,6 +1,7 @@
 package me.kall.doespotatotick.events;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.ext.Tickable;
@@ -35,29 +36,42 @@ public class ConfigEvents {
         if (!ConfigConstants.mobFarmDetection || level.getServer().getTickCount() % 100 != 0) return;
         level.getServer().execute(() -> {
             if (ConfigConstants.detectEnemies) {
-                IntSet enemies = EntityTracker.getEntities(level, chunk, ENEMIES);
-                if (enemies.size() >= ConfigConstants.mobFarmThreshold) {
-                    for (int id : enemies) {
-                        Entity entity = level.getEntity(id);
-                        if (entity == null) continue;
-                        ((Tickable) entity).dpt$setAlwaysTick(true);
+                ObjectList<IntSet> enemies = EntityTracker.getEntityList(level, chunk, ENEMIES);
+                if (count(enemies) >= ConfigConstants.mobFarmThreshold) {
+                    for (IntSet intSet : enemies) {
+                        for (int id : intSet) {
+                            Entity entity = level.getEntity(id);
+                            if (entity == null) continue;
+                            ((Tickable) entity).dpt$setAlwaysTick(true);
+                        }
                     }
                 }
             }
 
             if (!ConfigConstants.mobFarmTypes.isEmpty()) {
                 for (EntityType<?> mobFarmType : ConfigConstants.mobFarmTypes) {
-                    IntSet typedEntities = EntityTracker.getEntities(level, chunk, mobFarmType);
-                    if (typedEntities.size() >= ConfigConstants.mobFarmThreshold) {
-                        for (int id : typedEntities) {
-                            Entity entity = level.getEntity(id);
-                            if (entity == null) continue;
-                            ((Tickable)entity).dpt$setAlwaysTick(true);
+                    ObjectList<IntSet> typedEntities = EntityTracker.getEntityList(level, chunk, mobFarmType);
+                    if (count(typedEntities) >= ConfigConstants.mobFarmThreshold) {
+                        for (IntSet intSet : typedEntities) {
+                            for (int id : intSet) {
+                                Entity entity = level.getEntity(id);
+                                if (entity == null) continue;
+                                ((Tickable)entity).dpt$setAlwaysTick(true);
+                            }
                         }
                     }
                 }
             }
         });
+    }
+
+    @Contract(pure = true)
+    private static int count(@NotNull ObjectList<IntSet> entities) {
+        int count = 0;
+        for (IntSet intSet : entities) {
+            count = intSet.size() + count;
+        }
+        return count;
     }
 
     public static void warn(PlayerEvent.PlayerLoggedInEvent event) {
