@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.MinecraftForge;
@@ -73,6 +74,10 @@ public final class DoesPotatoTick {
 
         if (tickable.dpt$alwaysTick()) return true;
         if (entity instanceof LivingEntity && (((LivingEntityAccessor)entity).dpt$isDead() || ((LivingEntity)entity).isDeadOrDying())) return true;
+        if (entity instanceof TamableAnimal && ((TamableAnimal)entity).getOwner() != null) {
+            tickable.dpt$setAlwaysTick(true);
+            return true;
+        }
         if (!tickableLevel.dpt$valid()) return true;
         if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
         if (level.getForcedChunks().contains(chunk)) return true;

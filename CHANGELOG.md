@@ -1,3 +1,2 @@
-# 5.5.4
-- Use getEntityList (available in Duplicationless new version) for better performance
-- Fix FakePlayer crash
+# 5.5.6
+- Skip optimizing ownable entities like wolves or horses

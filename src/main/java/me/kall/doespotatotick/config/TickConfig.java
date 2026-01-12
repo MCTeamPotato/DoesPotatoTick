@@ -19,7 +19,7 @@ public class TickConfig {
     static final ForgeConfigSpec.ConfigValue<List<? extends String>> MOB_FARM_TYPES;
 
     static {
-        List<? extends String> entityModIDList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks" , "valkyrienskies", "vs_eureka");
+        List<? extends String> entityModIDList = Lists.newArrayList("create", "witherstormmod", "traveloptics", "irons_spellbooks" , "valkyrienskies", "vs_eureka", "dyairdrop");
         List<? extends String> entityList = Lists.newArrayList("minecraft:ender_dragon", "minecraft:ghast", "minecraft:wither", "minecraft:player",
                 "alexsmobs:void_worm", "alexsmobs:void_worm_part", "alexsmobs:spectre",
                 "twilightforest:naga", "twilightforest:lich", "twilightforest:yeti", "twilightforest:snow_queen", "twilightforest:minoshroom", "twilightforest:hydra", "twilightforest:knight_phantom", "twilightforest:ur_ghast",
