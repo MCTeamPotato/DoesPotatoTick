@@ -1,2 +1,2 @@
-# 5.5.5
-- Add dyairdrop mod to our entity blacklist
+# 5.5.6
+- Skip optimizing ownable entities like wolves or horses

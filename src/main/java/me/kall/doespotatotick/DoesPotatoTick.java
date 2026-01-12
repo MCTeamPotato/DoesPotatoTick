@@ -2,9 +2,9 @@ package me.kall.doespotatotick;
 
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.config.TickConfig;
-import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.events.ClientEvents;
 import me.kall.doespotatotick.events.ConfigEvents;
+import me.kall.doespotatotick.events.PlayerTracker;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
 import me.kall.doespotatotick.integration.sodium.SodiumIntegration;
@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -74,6 +75,10 @@ public final class DoesPotatoTick {
         long chunk = entity.chunkPosition().toLong();
 
         if (tickable.dpt$alwaysTick()) return true;
+        if (entity instanceof OwnableEntity && ((OwnableEntity)entity).getOwner() != null) {
+            tickable.dpt$setAlwaysTick(true);
+            return true;
+        }
         if (entity instanceof LivingEntity living && (((LivingEntityAccessor)living).dpt$isDead() || living.isDeadOrDying())) return true;
         if (!tickableLevel.dpt$valid()) return true;
         if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
