@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.raid.Raider;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -70,6 +71,10 @@ public final class DoesPotatoTick {
         long chunk = entity.chunkPosition().toLong();
 
         if (tickable.dpt$alwaysTick()) return true;
+        if (entity instanceof OwnableEntity && ((OwnableEntity)entity).getOwner() != null) {
+            tickable.dpt$setAlwaysTick(true);
+            return true;
+        }
         if (entity instanceof LivingEntity living && (((LivingEntityAccessor)living).dpt$isDead() || living.isDeadOrDying())) return true;
         if (!tickableLevel.dpt$valid()) return true;
         if (ClaimManager.isClaimedChunk(level, entity.blockPosition())) return true;
