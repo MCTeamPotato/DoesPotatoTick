@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin implements Tickable.Level {
-    @Inject(method = "tickNonPassenger", at = @At("HEAD"))
+    @Inject(method = "tickNonPassenger", at = @At("HEAD"), cancellable = true)
     private void onTick(Entity entity, CallbackInfo ci) {
         if (DoesPotatoTick.invalidThread()) return;
         Tickable tickable = (Tickable) entity;
         tickable.dpt$setTickable(DoesPotatoTick.isTickable(entity, (ServerLevel) (Object) this));
-        entity.canUpdate(tickable.dpt$tickable());
+        if (!tickable.dpt$tickable()) ci.cancel();
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))
