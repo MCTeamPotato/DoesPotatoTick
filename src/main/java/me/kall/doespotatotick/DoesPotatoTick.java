@@ -9,6 +9,7 @@ import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.integration.ClaimManager;
 import me.kall.doespotatotick.mixin.access.LivingEntityAccessor;
 import me.kall.doespotatotick.network.TickablePacket;
+import me.kall.duplicationless.ext.RegistryEntry;
 import me.kall.duplicationless.network.Networker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -83,7 +84,7 @@ public final class DoesPotatoTick {
         if (level.getForcedChunks().contains(chunk)) return true;
         if (tickableLevel.dpt$hasRaids()) {
             if (ConfigConstants.onlyWhenNoRaids) return true;
-            if (((Tickable.EntityType)entity.getType()).dpt$raidTick()) return true;
+            if (ConfigConstants.alwaysTickRaiders.contains(RegistryEntry.get(entity))) return true;
             if (ConfigConstants.ignoreRaidersIfRaiding && entity instanceof Raider) return true;
         }
 

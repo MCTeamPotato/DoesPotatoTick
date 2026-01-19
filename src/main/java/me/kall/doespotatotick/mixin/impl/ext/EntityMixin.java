@@ -4,6 +4,7 @@ import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.doespotatotick.network.TickablePacket;
+import me.kall.duplicationless.ext.RegistryEntry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
@@ -63,7 +64,7 @@ public abstract class EntityMixin implements Tickable {
         if (entity instanceof Enemy && ConfigConstants.ignoreEnemies) return true;
         if (entity instanceof Animal && ConfigConstants.ignoreAnimals) return true;
 
-        return ((EntityType)entity.getType()).dpt$alwaysTick();
+        return ConfigConstants.alwaysTickEntities.contains(RegistryEntry.get(entity)) || ConfigConstants.alwaysTickEntitiesModID.contains(RegistryEntry.get(entity).getNamespace());
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))

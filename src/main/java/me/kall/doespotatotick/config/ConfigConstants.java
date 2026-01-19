@@ -3,14 +3,12 @@ package me.kall.doespotatotick.config;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.kall.doespotatotick.ext.Tickable;
 import me.kall.duplicationless.util.RegistryEntries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -70,18 +68,6 @@ public class ConfigConstants {
     }
 
     public static void alwaysTickSetup() {
-        for (Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>> entry : ForgeRegistries.ENTITIES.getEntries()) {
-            ResourceLocation id = entry.getKey().location();
-            Tickable.EntityType entityType = (Tickable.EntityType) entry.getValue();
-            if (alwaysTickEntities.contains(id) || alwaysTickEntitiesModID.contains(id.getNamespace())) {
-                entityType.dpt$setAlwaysTick(true);
-            }
-
-            if (alwaysTickRaiders.contains(id)) {
-                entityType.dpt$setRaidTick(true);
-            }
-        }
-
         Optional.ofNullable(ServerLifecycleHooks.getCurrentServer()).ifPresent(server -> server.getAllLevels().forEach(level -> level.getAllEntities().forEach(entity -> ((Tickable)entity).dpt$setAlwaysTick(((Tickable)entity).dpt$checkAlwaysTick()))));
     }
 }

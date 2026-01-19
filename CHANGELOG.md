@@ -1,2 +1,2 @@
-# 5.5.6
-- Skip optimizing ownable entities like wolves or horses
+# 5.6.0
+- No longer iterate all the registered entities during game startup.
