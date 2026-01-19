@@ -1,2 +1,2 @@
-# 5.6.0
-- No longer iterate all the registered entities during game startup.
+# 5.6.1
+- No longer use forge canUpdate property
