@@ -16,7 +16,6 @@
     "impl.ServerLevelMixin",
     "impl.ServerPlayerMixin",
     "impl.ext.EntityMixin",
-    "impl.ext.EntityTypeMixin",
     "impl.ext.LevelMixin"
   ],
   "client": [
