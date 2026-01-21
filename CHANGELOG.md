@@ -1,2 +1,2 @@
-# 5.6.1
-- No longer use forge canUpdate property
+# 5.6.2
+- Resolve https://github.com/MCTeamPotato/DoesPotatoTick/issues/5
