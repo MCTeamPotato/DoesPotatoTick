@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import me.kall.doespotatotick.DoesPotatoTick;
 import me.kall.doespotatotick.config.TickConfig;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import org.embeddedt.embeddium.api.OptionGUIConstructionEvent;
@@ -27,12 +28,13 @@ public class SodiumIntegration {
         List<OptionGroup> groups = new ArrayList<>();
         OptionImpl<EmbeddiumOptions, Boolean> skipRenderingUntickable = booleanOptionFor("doespotatotick.skip.untickable", "doespotatotick.skip.untickable.tooltip", TickConfig.Client.SKIP_RENDERING_UNTICKABLE, OptionImpact.HIGH);
         OptionImpl<EmbeddiumOptions, Boolean> projectileWeaponSkip = booleanOptionFor("doespotatotick.skip.shoot", "doespotatotick.skip.shoot.tooltip", TickConfig.Client.PROJECTILE_WEAPON_SKIP, OptionImpact.LOW);
-        groups.add(OptionGroup.createBuilder().add(skipRenderingUntickable).add(projectileWeaponSkip).build());
+        groups.add(OptionGroup.createBuilder().add(skipRenderingUntickable).add(projectileWeaponSkip).setId(ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, DoesPotatoTick.MOD_ID)).build());
         return groups;
     }
 
-    private static OptionImpl<EmbeddiumOptions, Boolean> booleanOptionFor(String name, String tooltip, ModConfigSpec.BooleanValue config, OptionImpact impact) {
+    private static OptionImpl<EmbeddiumOptions, Boolean> booleanOptionFor(@NotNull String name, String tooltip, ModConfigSpec.BooleanValue config, OptionImpact impact) {
         return OptionImpl.createBuilder(Boolean.class, storage)
+                .setId(ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, name.split("\\.")[2]))
                 .setName(Component.translatable(name))
                 .setTooltip(Component.translatable(tooltip))
                 .setControl(TickBoxControl::new)
