@@ -28,7 +28,7 @@ public class SodiumIntegration {
         List<OptionGroup> groups = new ArrayList<>();
         OptionImpl<EmbeddiumOptions, Boolean> skipRenderingUntickable = booleanOptionFor("doespotatotick.skip.untickable", "doespotatotick.skip.untickable.tooltip", TickConfig.Client.SKIP_RENDERING_UNTICKABLE, OptionImpact.HIGH);
         OptionImpl<EmbeddiumOptions, Boolean> projectileWeaponSkip = booleanOptionFor("doespotatotick.skip.shoot", "doespotatotick.skip.shoot.tooltip", TickConfig.Client.PROJECTILE_WEAPON_SKIP, OptionImpact.LOW);
-        groups.add(OptionGroup.createBuilder().add(skipRenderingUntickable).add(projectileWeaponSkip).setId(ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, DoesPotatoTick.MOD_ID)).build());
+        groups.add(OptionGroup.createBuilder().setId(ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, "does_potato_tick_group")).add(skipRenderingUntickable).add(projectileWeaponSkip).setId(ResourceLocation.fromNamespaceAndPath(DoesPotatoTick.MOD_ID, DoesPotatoTick.MOD_ID)).build());
         return groups;
     }
 
