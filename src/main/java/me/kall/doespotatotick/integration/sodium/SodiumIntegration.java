@@ -9,6 +9,7 @@ import me.jellysquid.mods.sodium.client.gui.options.OptionPage;
 import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
 import me.jellysquid.mods.sodium.client.gui.options.storage.SodiumOptionsStorage;
 import me.kall.doespotatotick.DoesPotatoTick;
+import me.kall.doespotatotick.config.ConfigConstants;
 import me.kall.doespotatotick.config.TickConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -36,7 +37,10 @@ public class SodiumIntegration {
                 .setName(Component.translatable(name))
                 .setTooltip(Component.translatable(tooltip))
                 .setControl(TickBoxControl::new)
-                .setBinding((sodiumGameOptions, value) -> config.set(value), sodiumGameOptions -> config.get())
+                .setBinding((sodiumGameOptions, value) -> {
+                    config.set(value);
+                    ConfigConstants.validateClient();
+                }, sodiumGameOptions -> config.get())
                 .setImpact(impact)
                 .build();
     }
