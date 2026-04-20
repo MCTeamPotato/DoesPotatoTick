@@ -19,7 +19,7 @@ public abstract class ServerLevelMixin implements Tickable.Level {
         if (DoesPotatoTick.invalidThread()) return;
         Tickable tickable = (Tickable) entity;
         tickable.dpt$setTickable(DoesPotatoTick.isTickable(entity, (ServerLevel) (Object) this));
-        if (entity.getPersistentData().getBoolean("DPTCanUpdateFixed")) {
+        if (!entity.getPersistentData().getBoolean("DPTCanUpdateFixed")) {
             entity.canUpdate(true);
             entity.getPersistentData().putBoolean("DPTCanUpdateFixed", true);
         }
